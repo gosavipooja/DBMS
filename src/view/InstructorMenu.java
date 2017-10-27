@@ -1,14 +1,22 @@
 package view;
 
+import java.sql.Connection;
 import java.util.Scanner;
 
+import connection.ConnectionManager;
+import connection.FetchQueries;
+import model.Instructor;
 import model.User;
+import utils.InputScanner;
+import utils.Session;
 
 public class InstructorMenu {
 	public void showMenu() {
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = InputScanner.getScanner();
 		boolean flag = true;
 		while (flag) {
+			
+			System.out.println("MAIN MENU");
 			System.out.println("1. View profile");
 			System.out.println("2. View courses");
 			System.out.println("3. Add a course");
@@ -23,10 +31,10 @@ public class InstructorMenu {
 			System.out.println("12. Remove question from exercise");
 			System.out.println("13. Log out");
 			
-			int choice = sc.nextInt();
-			flag = false;
+			int choice = Integer.valueOf(sc.nextLine());
 			switch(choice) {
 			case 1:
+				viewProfile();
 				break;
 			case 2:
 				break;
@@ -51,15 +59,29 @@ public class InstructorMenu {
 			case 12:
 				break;
 			case 13:
+				Session.logOut();
+				flag = false;
 				break;
 			default: 
-				flag = true;
 				System.out.println("Invalid choice, please try again!");
 				
 			}
 			
 		}
-		sc.close();
-		System.out.println("I am here");
+		
+		System.out.println("Goodbye!");
+		
+	}
+	
+	void viewProfile() {
+		User user = Session.getUser();
+		Connection connection = new ConnectionManager().getConnection();
+		Instructor instr = FetchQueries.getInstructorDetails(connection,user);
+		System.out.println("************PROFILE************");
+		System.out.println("Name: " + instr.getName());
+		System.out.println("Email: " + instr.getEmail());
+		System.out.println("ID: " + instr.getUserId());
+		System.out.println("Office address: " + instr.getOfficeAddress());
+		System.out.println("************END************");
 	}
 }

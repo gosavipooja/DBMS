@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import utils.InputScanner;
+
 public class StartingUI {
 
 	public static void main(String[] args) {
@@ -13,11 +15,10 @@ public class StartingUI {
 	}
 	
 	public static void beginApplication() {
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = InputScanner.getScanner();
 		int input = 0;
 		boolean flag = true;
 		while(flag) {
-			sc = new Scanner(System.in);
 			System.out.println("Choose an option : ");
 			System.out.println("1. Login");
 			System.out.println("2. Exit");
@@ -50,6 +51,5 @@ public class StartingUI {
 				break;
 			}
 		}
-		sc.close();
 	}
 }

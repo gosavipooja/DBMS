@@ -10,12 +10,17 @@ public class Student extends User{
 	private String studentId;
 	private String level;
 	
-	public Student() {
-		super();
+	public Student(User user) {
+		super(user);
 	}
 	
-	public Student(String studentId, String level) {
-		super();
+	public Student(Student std) {
+		studentId = std.studentId;
+		level = std.level;
+	}
+	
+	public Student(User user, String studentId, String level) {
+		super(user);
 		this.studentId = studentId;
 		this.level = level;
 	}
