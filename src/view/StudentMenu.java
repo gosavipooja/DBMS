@@ -2,14 +2,12 @@ package view;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Scanner;
+import java.util.*;
 
 import connection.ConnectionManager;
 import connection.FetchQueries;
 import connection.UpdateQueries;
-import model.Instructor;
-import model.Student;
-import model.User;
+import model.*;
 import utils.InputScanner;
 import utils.Session;
 
@@ -22,7 +20,7 @@ public class StudentMenu {
 			System.out.println("******* STUDENT MENU *******");
 			System.out.println("1. View profile");
 			System.out.println("2. Edit profile");
-			System.out.println("3. View courses");
+			System.out.println("3. View/Select courses");
 			System.out.println("4. Log out");
 			
 			int choice = Integer.valueOf(sc.nextLine());
@@ -34,6 +32,7 @@ public class StudentMenu {
 				editProfile();
 				break;
 			case 3:
+				selectCourses();
 				break;
 			case 4:
 				Session.logOut();
@@ -55,12 +54,11 @@ public class StudentMenu {
 		Connection connection = new ConnectionManager().getConnection();
 		Student stu = FetchQueries.getStudentDetails(connection,user);
 		String level = (stu.getLevel().compareToIgnoreCase("u")==0 )?"Undergraduate":"Graduate";
-		System.out.println("\n\n");
 		System.out.println("************PROFILE************");
-		System.out.println("Name:\t" + stu.getName());
-		System.out.println("Email:\t" + stu.getEmail());
-		System.out.println("ID:\t" + stu.getUserId());
-		System.out.println("Level:\t" + level);
+		System.out.println("Name:\t\t" + stu.getName());
+		System.out.println("Email:\t\t" + stu.getEmail());
+		System.out.println("Student ID:\t\t" + stu.getUserId());
+		System.out.println("Level:\t\t" + level);
 		System.out.println("************END************");
 		System.out.println("\n\n");
 		try {
@@ -78,33 +76,39 @@ public class StudentMenu {
 		Connection connection = new ConnectionManager().getConnection();
 		Student old_stu = FetchQueries.getStudentDetails(connection,user);
 		
-		System.out.println("\n\nSTUDENT EDIT PROFILE");
-		System.out.println("1. Edit Name");
-		System.out.println("2. Edit Password");
-		System.out.println("3. Go Back");
-
-		int choice = Integer.valueOf(sc.nextLine());
-		switch (choice) {
-		case 1:
-			System.out.println("\n\nPlease enter the new name:");
-			String name = sc.nextLine();
-			// Don't update if blank string is given
-			if (name.length() > 0) {
-				UpdateQueries.updateUserName(connection, user, name);
+		boolean flag = true;
+		while(flag) {
+			System.out.println("\n\n***** EDIT STUDENT PROFILE *****");
+			System.out.println("1. Edit Name");
+			System.out.println("2. Edit Password");
+			System.out.println("3. Go Back");
+	
+			int choice = Integer.valueOf(sc.nextLine());
+			switch (choice) {
+			case 0:
+				flag=false; 
+				break;
+			case 1:
+				System.out.println("\n\nPlease enter the new name:");
+				String name = sc.nextLine();
+				// Don't update if blank string is given
+				if (name.length() > 0) {
+					UpdateQueries.updateUserName(connection, user, name);
+				}
+				break;
+			case 2:
+				System.out.println("\n\nPlease enter the new password:");
+				String passwd = sc.nextLine();
+				// Don't update if blank string is given
+				if (passwd.length() > 0) {
+					UpdateQueries.updateUserPassword(connection, user, passwd);
+				}
+				break;
+			case 3:
+				break;
+			default:
+				System.out.println("Invalid choice, please try again!");
 			}
-			break;
-		case 2:
-			System.out.println("\n\nPlease enter the new password:");
-			String passwd = sc.nextLine();
-			// Don't update if blank string is given
-			if (passwd.length() > 0) {
-				UpdateQueries.updateUserPassword(connection, user, passwd);
-			}
-			break;
-		case 3:
-			break;
-		default:
-			System.out.println("Invalid choice, please try again!");
 		}
 		
 		try {
@@ -113,6 +117,49 @@ public class StudentMenu {
 			e.printStackTrace();
 			System.err.println("Failed to close connection");
 		}
+	}
+	
+	private void selectCourses() {
+		Scanner sc = InputScanner.getScanner();
+		User user = Session.getUser();
+		Connection connection = new ConnectionManager().getConnection();
+		List <Course> cList = FetchQueries.getCoursesByStudent(connection, user);
+		
+		while(true) {
+			System.out.println("\n\n***** SELECT COURSES *****");
+			for(int i=0; i<cList.size(); i++) {
+				Course course = cList.get(i);
+				System.out.println(""+(i+1)+". "+course);
+			}
+			
+			if(cList.size()==0) {
+				System.out.println("You have not enrolled in any course");
+				return;
+			}
+			
+			System.out.println("\nEnter your choice for more information about course:");
+			int choice = sc.nextInt();
+			
+			if(choice <= 0) return;
+			else if (choice > cList.size()) {
+				System.out.println("Invalid choice. Please try again");
+				continue;
+			} 
+			
+			// Retrieve the appropriate course
+			Course course = cList.get(choice-1);
+			getHomeworksByCourse(course);
+		}
+		
+	}
+	
+	
+	private void getHomeworksByCourse(Course course) {
+		Scanner sc = InputScanner.getScanner();
+		User user = Session.getUser();
+		Connection connection = new ConnectionManager().getConnection();
+		
+		System.out.println("\n\n***** SELECT Homeworks for "+course.getCourseCode()+" *****");
 	}
 	
 }

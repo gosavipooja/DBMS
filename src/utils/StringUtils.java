@@ -35,4 +35,10 @@ public class StringUtils {
 	
 	//Get Students' details
 	public static final String UPDATE_STUDENTS = "SELECT * FROM student stu where stu.student_id = ?";
+	
+	//Get courses for a student
+	public static final String GET_COURSES_BY_STUDENTS = "SELECT * FROM Gradiance.enrollment e "
+			+"JOIN Gradiance.course c ON  e.course_id=c.course_id "
+			+"WHERE e.student_id = ?";
+	
 }

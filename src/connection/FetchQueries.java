@@ -186,6 +186,7 @@ public class FetchQueries {
 				System.out.println("Failed to close connection");
 			}
 	}
+	
 	public static Student getStudentDetails(Connection connection, User user) {
 		Student stu = null;
 		try {
@@ -201,8 +202,31 @@ public class FetchQueries {
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
 		}
 		return stu;
+	}
+	
+	public static List<Course> getCoursesByStudent(Connection connection, User user) {
+		List <Course> cList = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES_BY_STUDENTS);
+			pst.setString(1, user.getUserId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					cList.add( new Course(result)) ;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return cList;
 	}
 }
  
