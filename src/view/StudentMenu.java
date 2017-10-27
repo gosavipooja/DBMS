@@ -188,27 +188,14 @@ public class StudentMenu {
 			return;
 		}
 		
-		while(true) {
-			System.out.println("\n\n***** SELECT Past Homeworks for "+course.getCourseCode()+" *****");
-			
-			for(int i=0;i<hList.size();i++) {
-				Homework hw = hList.get(i);
-				System.out.println(""+(i+1)+". "+hw);
-			}
-			
-			System.out.println("\nEnter your choice for more information:");
-			
-			int ch = sc.nextInt();
-			
-			if(ch<=0) return;
-			
-			else if(ch > hList.size())
-				System.out.println("\nInvalid Choice. Please try again");
-			
-			else {
-				//Display report for the particular homework
-			}
-		}
+		System.out.println("\n\n***** Your Report for Past Homeworks of "+course.getCourseCode()+" *****");
+		
+		for(int i=0;i<hList.size();i++) {
+			Homework hw = hList.get(i);
+			connection = new ConnectionManager().getConnection();
+			Report report = FetchQueries.getReportByExercise(connection, user, hw);
+			System.out.println(""+(i+1)+". "+hw+"\t--\t"+((report!=null)?report:"UNATTEMPTED"));
+		}			
 	}
 	
 }

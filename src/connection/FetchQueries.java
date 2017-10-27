@@ -7,12 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Course;
-import model.Homework;
-import model.Instructor;
-import model.Student;
-import model.TeachingAssistant;
-import model.User;
+import model.*;
 import utils.StringUtils;
 
 public class FetchQueries {
@@ -249,6 +244,28 @@ public class FetchQueries {
 			close(connection);
 		}
 		return hList;
+	}
+	
+	public static Report getReportByExercise(Connection connection, User user, Homework hw) {
+		Report report = null;
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_REPORT_BY_EXERCISE);
+			pst.setString(1, user.getUserId());
+			pst.setInt(2, hw.getHomeworkId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					report = new Report(result);
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return report ;
 	}
 }
  
