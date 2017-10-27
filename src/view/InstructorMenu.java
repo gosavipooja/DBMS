@@ -1,5 +1,6 @@
 package view;
 
+import java.util.Arrays;
 import java.util.List;
 import java.sql.Connection;
 import java.util.Scanner;
@@ -7,6 +8,7 @@ import java.util.Scanner;
 import connection.ConnectionManager;
 import connection.FetchQueries;
 import model.Course;
+import model.Homework;
 import model.Instructor;
 import model.User;
 import utils.InputScanner;
@@ -78,17 +80,55 @@ public class InstructorMenu {
 	
 	void viewProfile() {
 		User user = Session.getUser();
-		Connection connection = new ConnectionManager().getConnection();
 		Instructor instr = FetchQueries.getInstructorDetails(user);
-		System.out.println("************PROFILE************");
-		System.out.println("Name: " + instr.getName());
-		System.out.println("Email: " + instr.getEmail());
-		System.out.println("ID: " + instr.getUserId());
-		System.out.println("Office address: " + instr.getOfficeAddress());
-		System.out.println("************END************");
+		instr.print();
 	}
 	
 	void viewCourses() {
-		List<Course> courses = FetchQueries.fetchCourses();
+		System.out.println("Enter course code: ");
+		String code = InputScanner.getScanner().nextLine();
+		Course course = FetchQueries.fetchCourseByCode(code);
+		if(course == null) {
+			System.out.println("Course not found!!");
+			return;
+		}
+		course.print();
+		
+		while(true) {
+			System.out.println("************COURSE MENU************");
+			System.out.println("0. Back to main menu");
+			System.out.println("1. View exercises");
+			System.out.println("2. Add exercises");
+			System.out.println("3. View TA");
+			System.out.println("4. Add TA");
+			System.out.println("5. Enroll student");
+			System.out.println("6. Drop student");
+			System.out.println("7. View report");
+			int choice = Integer.valueOf(InputScanner.getScanner().nextLine());
+			switch(choice) {
+			case 0: return;
+			case 1: 
+				viewExerciseDetails(course.getCourse_id());
+				break;
+			default: System.out.println("Invalid Input");
+			}
+		}
+		
+	}
+	
+	void viewExerciseDetails(int course_id) {
+		List<Integer> ids = FetchQueries.getExerciseIDsForCourse(course_id);
+		if(ids.isEmpty()) System.out.println("No exercises exist for this course, sorry!!");
+		else {
+			System.out.println("Valid exercise ids for this course are " + Arrays.toString(ids.toArray()));
+			System.out.println("Enter which one you want to view: ");
+			int choice = Integer.valueOf(InputScanner.getScanner().nextLine());
+			Homework hw = FetchQueries.getExerciseByID(choice);
+			if(hw == null) System.out.println("Wrong input!");
+			else {
+				hw.print();
+			}
+			
+		}
 	}
 }

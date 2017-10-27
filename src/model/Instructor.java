@@ -29,5 +29,12 @@ public class Instructor extends User {
 		this.officeAddress = officeAddress;
 	}
 	
+	public void print() {
+		System.out.println("************INSTRUCTOR PROFILE************");
+		System.out.println("Name: " + getName());
+		System.out.println("Email: " + getEmail());
+		System.out.println("ID: " + getUserId());
+		System.out.println("Office address: " + officeAddress);
+	}
 	
 }

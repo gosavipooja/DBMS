@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Course;
+import model.Homework;
 import model.Instructor;
 import model.Student;
 import model.TeachingAssistant;
@@ -16,22 +17,61 @@ import utils.StringUtils;
 
 public class FetchQueries {
 	
-	public static List<Course> fetchCourses() {
-		List<Course> courses = new ArrayList<Course>();
+	public static List<Integer> getExerciseIDsForCourse(int course_id) {
+		List<Integer> ids = new ArrayList<Integer>();
 		Connection connection = new ConnectionManager().getConnection();
 		try {
-			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES);
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_EXERCISE_BY_COURSE);
+			pst.setLong(1, course_id);
 			ResultSet result = pst.executeQuery();
 			while(result.next()) {
-				courses.add(new Course(result));
+				ids.add(result.getInt("homework_id"));
 			}
 		} catch (SQLException e) {
-			System.out.println("Failed to fetch the user!! "+e.getMessage());
+			System.out.println("Failed to fetch the course!! "+e.getMessage());
 			e.printStackTrace();
 		} finally {
 			close(connection);
 		}
-		return courses;
+		return ids;
+	}
+	
+	public static Homework getExerciseByID(int id) {
+		Homework hw = null;
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_EXERCISE_BY_ID);
+			pst.setLong(1, id);
+			ResultSet result = pst.executeQuery();
+			while(result.next()) {
+				hw = new Homework(result);
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to fetch the course!! "+e.getMessage());
+			e.printStackTrace();
+		} finally {
+			close(connection);
+		}
+		return hw;
+	}
+	
+	public static Course fetchCourseByCode(String code) {
+		Course course = null;
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES);
+			pst.setString(1, code);
+			ResultSet result = pst.executeQuery();
+			while(result.next()) {
+				course = new Course(result);
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to fetch the course!! "+e.getMessage());
+			e.printStackTrace();
+		} finally {
+			close(connection);
+		}
+		return course;
 	}
 	
 	public static User fetchLoginUser (String username, String password) {
