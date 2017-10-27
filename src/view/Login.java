@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import utils.Session;
 import connection.ConnectionManager;
 import connection.FetchQueries;
 import model.Instructor;
@@ -62,6 +63,7 @@ public class Login {
 					break;
 				}
 			} else {
+				Session.logIn(user);
 				System.out.println("Login Succesful");
 				flag = false;
 			}
