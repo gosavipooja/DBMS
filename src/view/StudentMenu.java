@@ -23,7 +23,7 @@ public class StudentMenu {
 			System.out.println("3. View/Select courses");
 			System.out.println("4. Log out");
 			
-			int choice = Integer.valueOf(sc.nextLine());
+			int choice = sc.nextInt();
 			switch(choice) {
 			case 1:
 				viewProfile();
@@ -165,7 +165,7 @@ public class StudentMenu {
 			int ch = sc.nextInt();
 			
 			if(ch==1) {
-				
+				getCurrentHomeworksForCourse(course);
 			} else if (ch==2) {
 				getPastHomeworksForCourse(course);
 			} else if (ch == 0) return;
@@ -196,6 +196,46 @@ public class StudentMenu {
 			Report report = FetchQueries.getReportByExercise(connection, user, hw);
 			System.out.println(""+(i+1)+". "+hw+"\t--\t"+((report!=null)?report:"UNATTEMPTED"));
 		}			
+	}
+	
+	private void getCurrentHomeworksForCourse(Course course) {
+		Connection connection = new ConnectionManager().getConnection();
+		Scanner sc = InputScanner.getScanner();
+		User user = Session.getUser();
+		List<Homework> hList = FetchQueries.getCurrentExercisesByCourse(connection, user, course);
+		
+		if(hList.isEmpty()) {
+			System.out.println("\nNo current homeworks");
+			return;
+		}
+		
+		while (true) {
+			System.out.println("\n\n***** Homeworks Due for "+course.getCourseCode()+" *****");
+			
+			for(int i=0;i<hList.size();i++) {
+				Homework hw = hList.get(i);
+				System.out.println(""+(i+1)+". "+hw);
+			}	
+			
+			System.out.println("\nSelect the HW which you would like to attempt:");
+			int ch =sc.nextInt();
+			
+			if (ch<=0) return;
+			else if (ch>hList.size()) {
+				System.out.println("\nInvalid Choice");
+				continue;
+			} else {
+				//Allow the user to attempt the HW
+				attemptHw(hList.get(ch-1));
+			}
+		}
+	}
+	
+	private void attemptHw(Homework hw) {
+		System.out.println("\n\n***** Attempting "+hw+" *****");
+		System.out.println("Max attempts allowed = " + ((hw.getAllowedAttempts()<0)?"Unlimited":hw.getAllowedAttempts()) );
+		System.out.println("Points for correct answer = "+hw.getCorrectPoints());
+		System.out.println("Points for incorrect answer = "+hw.getIncorrectPoints());
 	}
 	
 }

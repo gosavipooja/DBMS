@@ -9,6 +9,7 @@ import java.util.List;
 
 import model.*;
 import utils.StringUtils;
+import utils.DateUtils;
 
 public class FetchQueries {
 	
@@ -229,7 +230,30 @@ public class FetchQueries {
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_PAST_EXERCISES_BY_COURSE);
 			pst.setInt(1, course.getCourse_id());
-			pst.setString(2, Utils.getCurrentDate());
+			pst.setString(2, DateUtils.getCurrentDate());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					hList.add( new Homework(result)) ;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return hList;
+	}
+	
+	public static List<Homework> getCurrentExercisesByCourse(Connection connection, User user, Course course) {
+		List <Homework> hList = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_CURRENT_EXERCISES_BY_COURSE);
+			pst.setInt(1, course.getCourse_id());
+			pst.setString(2, DateUtils.getCurrentDate());
+			pst.setString(3, DateUtils.getCurrentDate());
 			ResultSet result = pst.executeQuery();
 			if(result == null) {
 				System.out.println("Some issue....");
