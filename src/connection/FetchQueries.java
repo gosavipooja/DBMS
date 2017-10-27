@@ -32,6 +32,25 @@ public class FetchQueries {
 		return ids;
 	}
 	
+	public static List<CourseReport> getReportsForCourse(int courseid) {
+		List<CourseReport> report = new ArrayList<CourseReport>();
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_REPORT_FOR_COURSE);
+			pst.setLong(1, courseid);
+			ResultSet result = pst.executeQuery();
+			while(result.next()) {
+				report.add(new CourseReport(result));
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to fetch the course!! "+e.getMessage());
+			e.printStackTrace();
+		} finally {
+			close(connection);
+		}
+		return report;
+	}
+	
 	public static Homework getExerciseByID(int id) {
 		Homework hw = null;
 		Connection connection = new ConnectionManager().getConnection();

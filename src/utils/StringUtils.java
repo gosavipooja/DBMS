@@ -9,7 +9,6 @@ public class StringUtils {
 	public static final String UPDATE_USER_NAME = "UPDATE user SET name = ? WHERE user_id = ?";
 	//Update User Password
 	public static final String UPDATE_USER_PASSWORD = "UPDATE user SET password = ? WHERE user_id = ?";
-	
 	//Prepared Statement for Login
 	public static final String LOGIN = "SELECT * from user WHERE user_id = ? AND password = ?";
 	//Check if the user is a student
@@ -50,4 +49,23 @@ public class StringUtils {
 	//Get report by homework
 	public static final String GET_REPORT_BY_EXERCISE = "SELECT * FROM report r WHERE r.student_id = ? AND r.homework_id = ?";
 	
+	/** COURSE **/
+	// Add TA to course
+	public static final String ADD_TA_TO_COURSE = "INSERT into teaching_assistant_assists values (?, ?)";
+	
+	// Add Student to course
+	public static final String ADD_STUDENT_TO_COURSE = "INSERT into enrollment values (?, ?)";
+	
+	// Drop student from course
+	public static final String DROP_STUDENT_FROM_COURSE = "DELETE FROM enrollment where student_id = ? and course_id = ?";
+	
+	// Get report for course
+	public static final String GET_REPORT_FOR_COURSE = 
+			"select s.student_id, u.name, r.homework_id, r.score " + 
+			"from enrollment e, student s, homework h, report r, user u " + 
+			"where e.course_id = ? and e.student_id = s.student_id " + 
+			"and h.course_id = e.course_id and r.student_id = s.student_id " + 
+			"and r.homework_id = h.homework_id " + 
+			"and s.student_id = u.user_id " + 
+			"order by s.student_id, homework_id;"; 
 }
