@@ -12,4 +12,6 @@ public class StringUtils {
 	public static final String CHECK_TA = "SELECT * FROM teaching_assistant ta where ta.ta_id = ?";
 	//Obtain instructor details
 	public static final String GET_INSTRUCTORS = "SELECT * FROM instructor instr where instr.instructor_id = ?";
+	//Obtain all courses
+	public static final String GET_COURSES = "SELECT * FROM courses";
 }

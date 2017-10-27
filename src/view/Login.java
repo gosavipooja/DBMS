@@ -24,20 +24,12 @@ import model.User;
 public class Login {
 	//Task List : password encryption
 	public User performLoginAction(String username, String password) {
-		Connection connection = new ConnectionManager().getConnection();
-		User user = FetchQueries.fetchLoginUser(username, password, connection);
+		User user = FetchQueries.fetchLoginUser(username, password);
 		if(user == null) {
 			System.out.println("Failed to login");
 		}else {
 			System.out.println("Login Successful");
 			System.out.println("User name : "+user.getName());
-		}
-		try {
-			connection.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Cannot close Connection");
-			e.printStackTrace();
 		}
 		return user;
 	}
@@ -89,15 +81,13 @@ public class Login {
 	
 	public Student isStudent(User user) {
 		Student std = null;
-		Connection connection = new ConnectionManager().getConnection();
-		std = FetchQueries.checkIfStudent(connection,user);
+		std = FetchQueries.checkIfStudent(user);
 		return std;
 	}
 	
 	public TeachingAssistant isTA(Student std) {
 		TeachingAssistant ta = null;
-		Connection connection = new ConnectionManager().getConnection();
-		ta = FetchQueries.checkIfTA(connection,std);
+		ta = FetchQueries.checkIfTA(std);
 		return ta;
 	}
 	

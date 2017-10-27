@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import model.Course;
 import model.Instructor;
 import model.Student;
 import model.TeachingAssistant;
@@ -13,7 +16,26 @@ import utils.StringUtils;
 
 public class FetchQueries {
 	
-	public static User fetchLoginUser (String username, String password, Connection connection) {
+	public static List<Course> fetchCourses() {
+		List<Course> courses = new ArrayList<Course>();
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES);
+			ResultSet result = pst.executeQuery();
+			while(result.next()) {
+				courses.add(new Course(result));
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to fetch the user!! "+e.getMessage());
+			e.printStackTrace();
+		} finally {
+			close(connection);
+		}
+		return courses;
+	}
+	
+	public static User fetchLoginUser (String username, String password) {
+		Connection connection = new ConnectionManager().getConnection();
 		User currentUser = null;
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.LOGIN);
@@ -26,11 +48,14 @@ public class FetchQueries {
 		} catch (SQLException e) {
 			System.out.println("Failed to fetch the user!! "+e.getMessage());
 			e.printStackTrace();
-		} 
+		} finally {
+			close(connection);
+		}
 		return currentUser;
 	}
 	
-	public static Student checkIfStudent(Connection connection, User user) {
+	public static Student checkIfStudent(User user) {
+		Connection connection = new ConnectionManager().getConnection();
 		Student std = null;		
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.CHECK_STUDENT);
@@ -45,11 +70,14 @@ public class FetchQueries {
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to check from db"+e.getMessage());
+		} finally {
+			close(connection);
 		}
 		return std;
 	}
 	
-	public static TeachingAssistant checkIfTA(Connection connection, Student std) {
+	public static TeachingAssistant checkIfTA(Student std) {
+		Connection connection = new ConnectionManager().getConnection();
 		TeachingAssistant ta = null;		
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.CHECK_TA);
@@ -64,11 +92,14 @@ public class FetchQueries {
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
 		}
 		return ta;
 	}
 	
-	public static Instructor getInstructorDetails(Connection connection, User user) {
+	public static Instructor getInstructorDetails(User user) {
+		Connection connection = new ConnectionManager().getConnection();
 		Instructor instr = null;
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_INSTRUCTORS);
@@ -83,8 +114,18 @@ public class FetchQueries {
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
 		}
 		return instr;
+	}
+	
+	public static void close(Connection connection) {
+		try {
+			connection.close();
+			} catch (SQLException e) {
+				System.out.println("Failed to close connection");
+			}
 	}
 }
  
