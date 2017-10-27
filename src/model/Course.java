@@ -88,5 +88,9 @@ public class Course {
 		this.endDate = endDate;
 	}
 
+	@Override
+	public String toString() {
+		return this.name+" ("+this.courseCode+")";
+	}
 	
 }

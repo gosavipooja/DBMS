@@ -7,13 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Course;
-import model.Homework;
-import model.Instructor;
-import model.Student;
-import model.TeachingAssistant;
-import model.User;
+import model.*;
 import utils.StringUtils;
+import utils.DateUtils;
 
 public class FetchQueries {
 	
@@ -185,6 +181,115 @@ public class FetchQueries {
 			} catch (SQLException e) {
 				System.out.println("Failed to close connection");
 			}
+	}
+	
+	public static Student getStudentDetails(Connection connection, User user) {
+		Student stu = null;
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_STUDENTS);
+			pst.setString(1, user.getUserId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result.next()) {
+					stu = new Student(user,result.getString("student_id"),  result.getString("education_level"));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return stu;
+	}
+	
+	public static List<Course> getCoursesByStudent(Connection connection, User user) {
+		List <Course> cList = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES_BY_STUDENTS);
+			pst.setString(1, user.getUserId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					cList.add( new Course(result)) ;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return cList;
+	}
+	
+	public static List<Homework> getPastExercisesByCourse(Connection connection, User user, Course course) {
+		List <Homework> hList = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_PAST_EXERCISES_BY_COURSE);
+			pst.setInt(1, course.getCourse_id());
+			pst.setString(2, DateUtils.getCurrentDate());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					hList.add( new Homework(result)) ;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return hList;
+	}
+	
+	public static List<Homework> getCurrentExercisesByCourse(Connection connection, User user, Course course) {
+		List <Homework> hList = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_CURRENT_EXERCISES_BY_COURSE);
+			pst.setInt(1, course.getCourse_id());
+			pst.setString(2, DateUtils.getCurrentDate());
+			pst.setString(3, DateUtils.getCurrentDate());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					hList.add( new Homework(result)) ;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return hList;
+	}
+	
+	public static Report getReportByExercise(Connection connection, User user, Homework hw) {
+		Report report = null;
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_REPORT_BY_EXERCISE);
+			pst.setString(1, user.getUserId());
+			pst.setInt(2, hw.getHomeworkId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					report = new Report(result);
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return report ;
 	}
 }
  
