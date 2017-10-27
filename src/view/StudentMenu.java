@@ -1,6 +1,7 @@
 package view;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import connection.ConnectionManager;
@@ -17,7 +18,7 @@ public class StudentMenu {
 		boolean flag = true;
 		while (flag) {
 			
-			System.out.println("MAIN MENU");
+			System.out.println("STUDENT MENU");
 			System.out.println("1. View profile");
 			System.out.println("2. Edit profile");
 			System.out.println("3. View courses");
@@ -29,6 +30,7 @@ public class StudentMenu {
 				viewProfile();
 				break;
 			case 2:
+				editProfile();
 				break;
 			case 3:
 				break;
@@ -52,17 +54,52 @@ public class StudentMenu {
 		Connection connection = new ConnectionManager().getConnection();
 		Student stu = FetchQueries.getStudentDetails(connection,user);
 		String level = (stu.getLevel().compareToIgnoreCase("u")==0 )?"Undergraduate":"Graduate";
-		
+		System.out.println("\n\n");
 		System.out.println("************PROFILE************");
 		System.out.println("Name:\t" + stu.getName());
 		System.out.println("Email:\t" + stu.getEmail());
 		System.out.println("ID:\t" + stu.getUserId());
 		System.out.println("Level:\t" + level);
 		System.out.println("************END************");
+		System.out.println("\n\n");
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println("Failed to close connection");
+		}
 		
 	}
 	
 	private void editProfile() {
+		Scanner sc = InputScanner.getScanner();
+		User user = Session.getUser();
+		Connection connection = new ConnectionManager().getConnection();
+		Student old_stu = FetchQueries.getStudentDetails(connection,user);
 		
+		System.out.println("\n\nSTUDENT EDIT PROFILE");
+		System.out.println("1. Edit Name");
+		System.out.println("2. Edit Password");
+		System.out.println("3. Go Back");
+
+		int choice = Integer.valueOf(sc.nextLine());
+		switch(choice) {
+		case 1:
+			updateName();
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default: 
+			System.out.println("Invalid choice, please try again!");
+		}
+	}
+	
+	private void updateName()
+	{
+		System.out.println("\n\nEnter new name:");
+		Scanner sc = InputScanner.getScanner();
+		String name = 
 	}
 }

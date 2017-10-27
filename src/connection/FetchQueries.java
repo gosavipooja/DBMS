@@ -196,7 +196,7 @@ public class FetchQueries {
 				System.out.println("Some issue....");
 			}else {
 				while(result.next()) {
-					stu = new Student(user,result.getString("student_id"),  result.getString("level"));
+					stu = new Student(user,result.getString("student_id"),  result.getString("education_level"));
 				}
 			}
 		} catch (SQLException e) {
