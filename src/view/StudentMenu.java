@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import connection.ConnectionManager;
 import connection.FetchQueries;
+import connection.UpdateQueries;
 import model.Instructor;
 import model.Student;
 import model.User;
@@ -17,8 +18,8 @@ public class StudentMenu {
 		Scanner sc = InputScanner.getScanner();
 		boolean flag = true;
 		while (flag) {
-			
-			System.out.println("STUDENT MENU");
+			System.out.println("\n\n");
+			System.out.println("******* STUDENT MENU *******");
 			System.out.println("1. View profile");
 			System.out.println("2. Edit profile");
 			System.out.println("3. View courses");
@@ -83,23 +84,35 @@ public class StudentMenu {
 		System.out.println("3. Go Back");
 
 		int choice = Integer.valueOf(sc.nextLine());
-		switch(choice) {
+		switch (choice) {
 		case 1:
-			updateName();
+			System.out.println("\n\nPlease enter the new name:");
+			String name = sc.nextLine();
+			// Don't update if blank string is given
+			if (name.length() > 0) {
+				UpdateQueries.updateUserName(connection, user, name);
+			}
 			break;
 		case 2:
+			System.out.println("\n\nPlease enter the new password:");
+			String passwd = sc.nextLine();
+			// Don't update if blank string is given
+			if (passwd.length() > 0) {
+				UpdateQueries.updateUserPassword(connection, user, passwd);
+			}
 			break;
 		case 3:
 			break;
-		default: 
+		default:
 			System.out.println("Invalid choice, please try again!");
+		}
+		
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println("Failed to close connection");
 		}
 	}
 	
-	private void updateName()
-	{
-		System.out.println("\n\nEnter new name:");
-		Scanner sc = InputScanner.getScanner();
-		String name = 
-	}
 }
