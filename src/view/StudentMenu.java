@@ -4,12 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
-import connection.ConnectionManager;
-import connection.FetchQueries;
-import connection.UpdateQueries;
+import connection.*;
 import model.*;
-import utils.InputScanner;
-import utils.Session;
+import utils.*;
 
 public class StudentMenu {
 	public void showMenu() {
@@ -188,14 +185,61 @@ public class StudentMenu {
 			return;
 		}
 		
-		System.out.println("\n\n***** Your Report for Past Homeworks of "+course.getCourseCode()+" *****");
+		while(true) {
+			System.out.println("\n\n***** Your Past Homeworks for "+course.getCourseCode()+" *****");
+			
+			for(int i=0;i<hList.size();i++) {
+				Homework hw = hList.get(i);
+				connection = new ConnectionManager().getConnection();
+				Report report = FetchQueries.getReportByExercise(connection, user, hw);
+				System.out.println(""+(i+1)+". "+hw+"\t--\t"+((report!=null)?report:"UNATTEMPTED"));
+			}		
+			
+			System.out.println("\nEnter a number for further details:");
+			int ch = sc.nextInt();
+			
+			if(ch<=0) return;
+			else if (ch>hList.size()) System.out.println("\nInvalid choice. Please enter your choice again");
+			else {
+				Homework hw = hList.get(ch-1);
+				getFeedbackForHw(hw);
+			}
+		}
+	}
+	
+	private void getFeedbackForHw(Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
+		Scanner sc = InputScanner.getScanner();
+		User user = Session.getUser();
 		
-		for(int i=0;i<hList.size();i++) {
-			Homework hw = hList.get(i);
-			connection = new ConnectionManager().getConnection();
-			Report report = FetchQueries.getReportByExercise(connection, user, hw);
-			System.out.println(""+(i+1)+". "+hw+"\t--\t"+((report!=null)?report:"UNATTEMPTED"));
-		}			
+		System.out.println("\n\n***** Homework Report of "+hw+" *****");
+		
+		List<QuestionFeedback> hwFeedback = FetchQueries.getHwFeedback(connection, user, hw);
+		if(hwFeedback.isEmpty()) {
+			System.out.println("\nThis homework was unattempted");
+			return;
+		}
+		
+		int attempt = 0;
+		int counter = 1;
+		int score = -1;
+		for(QuestionFeedback qf:hwFeedback) {
+			//Signals start of new attempt
+			if(attempt != qf.getAttemptId()) {
+				attempt = qf.getAttemptId();
+				if(score<0) score = 0;
+				else {
+					System.out.println("\nScore = "+score);
+					score = 0;
+				}
+				System.out.println("\n\n***** Attempt #"+attempt+" *****\n");
+				counter = 1;
+			}
+			System.out.println("\n"+(counter++)+". "+qf);
+			score+=qf.getScore();
+		}
+		
+		System.out.println("\nScore = "+score);
 	}
 	
 	private void getCurrentHomeworksForCourse(Course course) {
