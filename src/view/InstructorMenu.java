@@ -2,10 +2,7 @@ package view;
 
 import java.util.Arrays;
 import java.util.List;
-import java.sql.Connection;
 import java.util.Scanner;
-
-import connection.ConnectionManager;
 import connection.FetchQueries;
 import connection.UpdateQueries;
 import model.Course;
@@ -142,6 +139,8 @@ public class InstructorMenu {
 			case 0: return;
 			case 1: 
 				viewExerciseDetails(course.getCourse_id());
+				break;
+			case 2:
 				break;
 			case 3:
 				viewTAs(course.getCourse_id());
