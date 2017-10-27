@@ -108,7 +108,7 @@ public class Login {
 	public Instructor fetchInstructor(User user) {
 		Instructor instr = null;
 		Connection connection = new ConnectionManager().getConnection();
-		instr = FetchQueries.getInstructorDetails(connection,instr);
+		instr = FetchQueries.getInstructorDetails(connection,user);
 		return instr;
 	}
 }
