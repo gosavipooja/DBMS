@@ -1,10 +1,12 @@
 package view;
 
+import java.util.List;
 import java.sql.Connection;
 import java.util.Scanner;
 
 import connection.ConnectionManager;
 import connection.FetchQueries;
+import model.Course;
 import model.Instructor;
 import model.User;
 import utils.InputScanner;
@@ -37,6 +39,7 @@ public class InstructorMenu {
 				viewProfile();
 				break;
 			case 2:
+				viewCourses();
 				break;
 			case 3:
 				break;
@@ -76,12 +79,16 @@ public class InstructorMenu {
 	void viewProfile() {
 		User user = Session.getUser();
 		Connection connection = new ConnectionManager().getConnection();
-		Instructor instr = FetchQueries.getInstructorDetails(connection,user);
+		Instructor instr = FetchQueries.getInstructorDetails(user);
 		System.out.println("************PROFILE************");
 		System.out.println("Name: " + instr.getName());
 		System.out.println("Email: " + instr.getEmail());
 		System.out.println("ID: " + instr.getUserId());
 		System.out.println("Office address: " + instr.getOfficeAddress());
 		System.out.println("************END************");
+	}
+	
+	void viewCourses() {
+		List<Course> courses = FetchQueries.fetchCourses();
 	}
 }
