@@ -228,5 +228,27 @@ public class FetchQueries {
 		}
 		return cList;
 	}
+	
+	public static List<Homework> getPastExercisesByCourse(Connection connection, User user, Course course) {
+		List <Homework> hList = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_PAST_EXERCISES_BY_COURSE);
+			pst.setInt(1, course.getCourse_id());
+			pst.setString(2, Utils.getCurrentDate());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					hList.add( new Homework(result)) ;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return hList;
+	}
 }
  

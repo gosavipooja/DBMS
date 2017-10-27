@@ -41,4 +41,7 @@ public class StringUtils {
 			+"JOIN Gradiance.course c ON  e.course_id=c.course_id "
 			+"WHERE e.student_id = ?";
 	
+	//Get exercise by course
+	public static final String GET_PAST_EXERCISES_BY_COURSE = "SELECT * FROM homework where course_id = ? AND deadline < ?";
+	
 }

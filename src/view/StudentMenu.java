@@ -157,9 +157,58 @@ public class StudentMenu {
 	private void getHomeworksByCourse(Course course) {
 		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
-		Connection connection = new ConnectionManager().getConnection();
+		while(true) {
+			System.out.println("\n\n***** SELECT Homeworks for "+course.getCourseCode()+" *****");
+			System.out.println("1. Current Open Homeworks");
+			System.out.println("2. Past Homeworks");
+			System.out.println("\nEnter your choice:");
+			int ch = sc.nextInt();
+			
+			if(ch==1) {
+				
+			} else if (ch==2) {
+				getPastHomeworksForCourse(course);
+			} else if (ch == 0) return;
+			else {
+				System.out.println("\nInvalid choice");
+				continue;
+			}
+		}
 		
-		System.out.println("\n\n***** SELECT Homeworks for "+course.getCourseCode()+" *****");
+	}
+	
+	private void getPastHomeworksForCourse(Course course) {
+		Connection connection = new ConnectionManager().getConnection();
+		Scanner sc = InputScanner.getScanner();
+		User user = Session.getUser();
+		List<Homework> hList = FetchQueries.getPastExercisesByCourse(connection, user, course);
+		
+		if(hList.isEmpty()) {
+			System.out.println("\nNo past homeworks found");
+			return;
+		}
+		
+		while(true) {
+			System.out.println("\n\n***** SELECT Past Homeworks for "+course.getCourseCode()+" *****");
+			
+			for(int i=0;i<hList.size();i++) {
+				Homework hw = hList.get(i);
+				System.out.println(""+(i+1)+". "+hw);
+			}
+			
+			System.out.println("\nEnter your choice for more information:");
+			
+			int ch = sc.nextInt();
+			
+			if(ch<=0) return;
+			
+			else if(ch > hList.size())
+				System.out.println("\nInvalid Choice. Please try again");
+			
+			else {
+				//Display report for the particular homework
+			}
+		}
 	}
 	
 }

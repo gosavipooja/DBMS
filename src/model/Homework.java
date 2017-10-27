@@ -34,4 +34,9 @@ public class Homework {
 		System.out.println("Correct points: "+ correct_points);
 		System.out.println("Incorrect points: "+ incorrect_points);
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }
