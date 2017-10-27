@@ -16,5 +16,9 @@ public class StringUtils {
 	public static final String GET_COURSES = "SELECT * FROM course where course_code = ?";
 	public static final String GET_EXERCISE_BY_COURSE = "SELECT * FROM homework where course_id = ?";
 	public static final String GET_EXERCISE_BY_ID = "SELECT * FROM homework where homework_id = ?";
+	public static final String GET_TA_FOR_COURSE = 
+			"SELECT t.ta_id as ta_id "
+			+ "FROM teaching_assistant_assists t, teaching_assistant ta "
+			+ "where t.ta_id = ta.ta_id and t.course_id = ?";
 	
 }

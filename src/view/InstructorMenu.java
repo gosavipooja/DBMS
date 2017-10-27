@@ -99,7 +99,7 @@ public class InstructorMenu {
 			System.out.println("0. Back to main menu");
 			System.out.println("1. View exercises");
 			System.out.println("2. Add exercises");
-			System.out.println("3. View TA");
+			System.out.println("3. View TAs");
 			System.out.println("4. Add TA");
 			System.out.println("5. Enroll student");
 			System.out.println("6. Drop student");
@@ -109,6 +109,9 @@ public class InstructorMenu {
 			case 0: return;
 			case 1: 
 				viewExerciseDetails(course.getCourse_id());
+				break;
+			case 3:
+				viewTAs(course.getCourse_id());
 				break;
 			default: System.out.println("Invalid Input");
 			}
@@ -130,5 +133,10 @@ public class InstructorMenu {
 			}
 			
 		}
+	}
+	
+	void viewTAs(int course_id) {
+		List<String> tas = FetchQueries.getTAsForCourse(course_id);
+		System.out.println("TAs for this course are: " + Arrays.toString(tas.toArray()));
 	}
 }

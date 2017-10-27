@@ -27,7 +27,6 @@ public class Homework {
 	
 	public void print() {
 		System.out.println("************HOMEWORK DETAILS************");
-		System.out.println("ID: "+ homework_id);
 		System.out.println("Name: "+ name);
 		System.out.println("Posted date: "+ posted_date);
 		System.out.println("Deadline: "+ deadline);

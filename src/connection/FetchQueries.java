@@ -55,6 +55,25 @@ public class FetchQueries {
 		return hw;
 	}
 	
+	public static List<String> getTAsForCourse(int id) {
+		List<String> ta = new ArrayList<String>();
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_TA_FOR_COURSE);
+			pst.setLong(1, id);
+			ResultSet result = pst.executeQuery();
+			while(result.next()) {
+				ta.add(result.getString("ta_id"));
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to fetch the course!! "+e.getMessage());
+			e.printStackTrace();
+		} finally {
+			close(connection);
+		}
+		return ta;
+	}
+	
 	public static Course fetchCourseByCode(String code) {
 		Course course = null;
 		Connection connection = new ConnectionManager().getConnection();
