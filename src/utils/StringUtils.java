@@ -21,4 +21,6 @@ public class StringUtils {
 			+ "FROM teaching_assistant_assists t, teaching_assistant ta "
 			+ "where t.ta_id = ta.ta_id and t.course_id = ?";
 	
+	//Get Students' details
+	public static final String GET_STUDENTS = "SELECT * FROM student stu where stu.student_id = ?";
 }

@@ -71,6 +71,8 @@ public class Login {
 				TeachingAssistant ta = isTA(std);
 				if (ta == null) {
 					System.out.println("Is not a TA!");
+					//For student
+					new StudentMenu().showMenu();
 				} else{
 					System.out.println("is a TA");
 				}

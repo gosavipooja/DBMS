@@ -186,5 +186,23 @@ public class FetchQueries {
 				System.out.println("Failed to close connection");
 			}
 	}
+	public static Student getStudentDetails(Connection connection, User user) {
+		Student stu = null;
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_STUDENTS);
+			pst.setString(1, user.getUserId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result.next()) {
+					stu = new Student(user,result.getString("student_id"),  result.getString("level"));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		}
+		return stu;
+	}
 }
  
