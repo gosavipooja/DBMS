@@ -10,12 +10,8 @@ public class Instructor extends User {
 	private String instructorId;
 	private String officeAddress;
 	
-	public Instructor() {
-		super();
-	}
-	
-	public Instructor(String instructorId, String officeAddress) {
-		super();
+	public Instructor(String instructorId, User user, String officeAddress) {
+		super(user);
 		this.instructorId = instructorId;
 		this.officeAddress = officeAddress;
 	}

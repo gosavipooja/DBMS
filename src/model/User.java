@@ -16,6 +16,13 @@ public class User {
 	public User() {
 		
 	}
+	
+	public User(User user) {
+		this.userId = user.userId;
+		this.name = user.name;
+		this.email = user.email;
+		this.password = user.password;
+	}
 			
 	public User(String userId, String name, String email, String password) {
 		super();

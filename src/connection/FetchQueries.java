@@ -39,9 +39,8 @@ public class FetchQueries {
 			if(result == null) {
 				System.out.println("User is not a student!");
 			}else {
-				System.err.println("Student exists!!");
 				while(result.next()) {
-					std = new Student(result.getString("student_id"),result.getString("education_level"));
+					std = new Student(user, result.getString("student_id"),result.getString("education_level"));
 				}
 			}
 		} catch (SQLException e) {
@@ -59,9 +58,8 @@ public class FetchQueries {
 			if(result == null) {
 				System.out.println("Student is not a TA!");
 			}else {
-				System.out.println("TA detected");
 				while(result.next()) {
-					ta = new TeachingAssistant(result.getString("ta_id"));
+					ta = new TeachingAssistant(std, result.getString("ta_id"));
 				}
 			}
 		} catch (SQLException e) {
@@ -79,9 +77,8 @@ public class FetchQueries {
 			if(result == null) {
 				System.out.println("Some issue....");
 			}else {
-				System.out.println("Instructor detected");
 				while(result.next()) {
-					instr = new Instructor(result.getString("instructor_id"), result.getString("office_location"));
+					instr = new Instructor(result.getString("instructor_id"), user, result.getString("office_location"));
 				}
 			}
 		} catch (SQLException e) {

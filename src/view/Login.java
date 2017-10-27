@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import utils.InputScanner;
 import utils.Session;
 import connection.ConnectionManager;
 import connection.FetchQueries;
@@ -42,7 +43,7 @@ public class Login {
 	}
 	
 	public void showLoginMenu() throws ParseException, SQLException, IOException {
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = InputScanner.getScanner();
 		User user = null;
 		boolean flag = true;
 		while (flag/*true*/) {
@@ -68,20 +69,13 @@ public class Login {
 				flag = false;
 			}
 		}
-		sc.close();
-		System.out.println("I am here");
 		
 		if(user != null) {
-			//Check if the user is a student or a teacher
-			System.out.println("My user is not null");
 			Student std = isStudent(user);
 			if(std == null) {
-				System.out.println("Is not a student");
-				System.out.println("Is an instructor");
-				Instructor instr = fetchInstructor(user);
-				
+				InstructorMenu menu = new InstructorMenu();
+				menu.showMenu();
 			}else {
-				System.out.println("Student found!");
 				TeachingAssistant ta = isTA(std);
 				if (ta == null) {
 					System.out.println("Is not a TA!");
@@ -107,10 +101,4 @@ public class Login {
 		return ta;
 	}
 	
-	public Instructor fetchInstructor(User user) {
-		Instructor instr = null;
-		Connection connection = new ConnectionManager().getConnection();
-		instr = FetchQueries.getInstructorDetails(connection,user);
-		return instr;
-	}
 }

@@ -12,7 +12,7 @@ public class Session {
 		return currentUser != null;
 	}
 	
-	public static void logOut(User user) {
+	public static void logOut() {
 		currentUser = null;
 	}
 	
