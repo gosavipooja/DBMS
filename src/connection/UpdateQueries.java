@@ -62,6 +62,23 @@ public class UpdateQueries {
 		}
 		System.out.println("Success!");
 	}
+	
+	public static void removeQuestionFromExercise(int exercise_id, int question_id) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.REMOVE_QUESTION_FROM_EXERCISE);
+			pst.setInt(1, exercise_id);
+			pst.setInt(2, question_id);
+			int result = pst.executeUpdate();
+			if(result == 0) {
+				System.out.println("Some unknown error occured");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+	}
 
 	public static void addHomework(Homework hw) {
 		Connection connection = new ConnectionManager().getConnection();

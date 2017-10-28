@@ -122,7 +122,7 @@ public class InstructorMenu {
 	}
 	
 	void removeQuestionFromExercise(int exercise_id, int question_id) {
-		
+		UpdateQueries.removeQuestionFromExercise(exercise_id, question_id);
 	}
 	
 	void viewProfile() {

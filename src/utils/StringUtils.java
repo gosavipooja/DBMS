@@ -77,4 +77,15 @@ public class StringUtils {
 			"and r.homework_id = h.homework_id " + 
 			"and s.student_id = u.user_id " + 
 			"order by s.student_id, homework_id;"; 
+
+	//Get feedback for homework
+	public static final String GET_EXERCISE_FEEDBACK = "SELECT q.text as question,ans.text as response, qb.correct as isCorrect, (qb.correct*hw.correct_points + (1-qb.correct)*hw.incorrect_points) as score, atm.attempt_id "
+														+ " FROM attempt as atm"
+														+ " JOIN question_bank as qb ON atm.question_bank_id=qb.question_bank_id"
+														+ " JOIN question as q ON q.question_id=qb.question_id"
+														+ " JOIN answer as ans ON ans.answer_id=qb.answer_id"
+														+ " JOIN homework as hw ON atm.homework_id=hw.homework_id"
+														+ " WHERE atm.student_id = ? AND atm.homework_id = ?"
+														+ " ORDER BY atm.attempt_id, question";
+
 }

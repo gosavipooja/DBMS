@@ -315,5 +315,28 @@ public class FetchQueries {
 		}
 		return report;
 	}
+	
+	public static List<QuestionFeedback> getHwFeedback(User user, Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
+		List<QuestionFeedback> hwFeedback = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_EXERCISE_FEEDBACK);
+			pst.setString(1, user.getUserId());
+			pst.setInt(2, hw.getHomeworkId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					hwFeedback.add(new QuestionFeedback(result));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return hwFeedback ;
+	}
 }
  
