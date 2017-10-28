@@ -1,12 +1,8 @@
 package view;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
-
-import connection.ConnectionManager;
-import connection.FetchQueries;
-import connection.UpdateQueries;
+import java.util.List;
+import java.util.Scanner;
+import connection.*;
 import model.*;
 import utils.InputScanner;
 import utils.Session;
@@ -51,8 +47,7 @@ public class StudentMenu {
 	
 	private void viewProfile() {
 		User user = Session.getUser();
-		Connection connection = new ConnectionManager().getConnection();
-		Student stu = FetchQueries.getStudentDetails(connection,user);
+		Student stu = FetchQueries.getStudentDetails(user);
 		String level = (stu.getLevel().compareToIgnoreCase("u")==0 )?"Undergraduate":"Graduate";
 		System.out.println("************PROFILE************");
 		System.out.println("Name:\t\t" + stu.getName());
@@ -61,20 +56,13 @@ public class StudentMenu {
 		System.out.println("Level:\t\t" + level);
 		System.out.println("************END************");
 		System.out.println("\n\n");
-		try {
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.err.println("Failed to close connection");
-		}
 		
 	}
 	
 	private void editProfile() {
 		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
-		Connection connection = new ConnectionManager().getConnection();
-		Student old_stu = FetchQueries.getStudentDetails(connection,user);
+		Student old_stu = FetchQueries.getStudentDetails(user);
 		
 		boolean flag = true;
 		while(flag) {
@@ -93,7 +81,7 @@ public class StudentMenu {
 				String name = sc.nextLine();
 				// Don't update if blank string is given
 				if (name.length() > 0) {
-					UpdateQueries.updateUserName(connection, user, name);
+					UpdateQueries.updateUserName(user, name);
 				}
 				break;
 			case 2:
@@ -101,7 +89,7 @@ public class StudentMenu {
 				String passwd = sc.nextLine();
 				// Don't update if blank string is given
 				if (passwd.length() > 0) {
-					UpdateQueries.updateUserPassword(connection, user, passwd);
+					UpdateQueries.updateUserPassword(user, passwd);
 				}
 				break;
 			case 3:
@@ -111,19 +99,12 @@ public class StudentMenu {
 			}
 		}
 		
-		try {
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.err.println("Failed to close connection");
-		}
 	}
 	
 	private void selectCourses() {
 		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
-		Connection connection = new ConnectionManager().getConnection();
-		List <Course> cList = FetchQueries.getCoursesByStudent(connection, user);
+		List<Course> cList = FetchQueries.getCoursesByStudent(user);
 		
 		while(true) {
 			System.out.println("\n\n***** SELECT COURSES *****");
@@ -178,10 +159,9 @@ public class StudentMenu {
 	}
 	
 	private void getPastHomeworksForCourse(Course course) {
-		Connection connection = new ConnectionManager().getConnection();
 		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
-		List<Homework> hList = FetchQueries.getPastExercisesByCourse(connection, user, course);
+		List<Homework> hList = FetchQueries.getPastExercisesByCourse( user, course);
 		
 		if(hList.isEmpty()) {
 			System.out.println("\nNo past homeworks found");
@@ -192,17 +172,15 @@ public class StudentMenu {
 		
 		for(int i=0;i<hList.size();i++) {
 			Homework hw = hList.get(i);
-			connection = new ConnectionManager().getConnection();
-			Report report = FetchQueries.getReportByExercise(connection, user, hw);
+			Report report = FetchQueries.getReportByExercise(user, hw);
 			System.out.println(""+(i+1)+". "+hw+"\t--\t"+((report!=null)?report:"UNATTEMPTED"));
 		}			
 	}
 	
 	private void getCurrentHomeworksForCourse(Course course) {
-		Connection connection = new ConnectionManager().getConnection();
 		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
-		List<Homework> hList = FetchQueries.getCurrentExercisesByCourse(connection, user, course);
+		List<Homework> hList = FetchQueries.getCurrentExercisesByCourse(user, course);
 		
 		if(hList.isEmpty()) {
 			System.out.println("\nNo current homeworks");
