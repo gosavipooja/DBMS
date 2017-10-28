@@ -2,7 +2,6 @@ package view;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import connection.FetchQueries;
 import connection.UpdateQueries;
 import model.Course;
@@ -15,7 +14,6 @@ import utils.Session;
 
 public class InstructorMenu {
 	public void showMenu() {
-		Scanner sc = InputScanner.getScanner();
 		boolean flag = true;
 		while (flag) {
 			
@@ -34,7 +32,7 @@ public class InstructorMenu {
 			System.out.println("12. Remove question from exercise");
 			System.out.println("13. Log out");
 			
-			int choice = Integer.valueOf(sc.nextLine());
+			int choice = InputScanner.scanInt();
 			switch(choice) {
 			case 1:
 				viewProfile();
@@ -47,52 +45,67 @@ public class InstructorMenu {
 			case 4:
 			{
 				System.out.println("Enter Student id: ");
-				String student = InputScanner.getScanner().nextLine();
+				String student = InputScanner.scanString();
 				System.out.println("Enter course id: ");
-				int course = Integer.valueOf(InputScanner.getScanner().nextLine());
+				int course = InputScanner.scanInt();
 				enrollStudentInCourse(student, course);
 				break;
 			}
 			case 5:
 			{
 				System.out.println("Enter Student id: ");
-				String student = InputScanner.getScanner().nextLine();
+				String student = InputScanner.scanString();
 				System.out.println("Enter course id: ");
-				int course = Integer.valueOf(InputScanner.getScanner().nextLine());
+				int course = InputScanner.scanInt();
 				dropStudentFromCourse(student, course);
 				break;
 			}
 			case 6:
 			{
 				System.out.println("Enter course id: ");
-				int course = Integer.valueOf(InputScanner.getScanner().nextLine());
+				int course = InputScanner.scanInt();
 				viewReport(course);
 				break;
 			}
 			case 7:
 			{
 				System.out.println("Enter course id: ");
-				int course = Integer.valueOf(InputScanner.getScanner().nextLine());
+				int course = InputScanner.scanInt();
 				System.out.println("Enter TA id you want to add to this course: ");
-				String ta = InputScanner.getScanner().nextLine();
+				String ta = InputScanner.scanString();
 				addTAsToCourse(course, ta);
 				break;
 			}
 			case 8:
 			{
 				System.out.println("Enter course id: ");
-				int course = Integer.valueOf(InputScanner.getScanner().nextLine());
+				int course = InputScanner.scanInt();
 				viewExerciseDetails(course);
+				break;
 			}
-				break;
+				
 			case 9:
+			{
+				System.out.println("Enter course id: ");
+				int course = InputScanner.scanInt();
+				addExercise(course);
 				break;
+			}
+				
 			case 10:
 				break;
 			case 11:
 				break;
 			case 12:
+			{
+				System.out.println("Enter exercise id: ");
+				int exercise_id = InputScanner.scanInt();
+				System.out.println("Enter question id: ");
+				int question_id = InputScanner.scanInt();
+				removeQuestionFromExercise(exercise_id, question_id);
 				break;
+			}
+				
 			case 13:
 				Session.logOut();
 				flag = false;
@@ -103,9 +116,13 @@ public class InstructorMenu {
 			}
 			
 		}
-		
+		InputScanner.closeScanner();
 		System.out.println("Goodbye!");
 		
+	}
+	
+	void removeQuestionFromExercise(int exercise_id, int question_id) {
+		UpdateQueries.removeQuestionFromExercise(exercise_id, question_id);
 	}
 	
 	void viewProfile() {
@@ -116,7 +133,7 @@ public class InstructorMenu {
 	
 	void viewCourses() {
 		System.out.println("Enter course code: ");
-		String code = InputScanner.getScanner().nextLine();
+		String code = InputScanner.scanString();
 		Course course = FetchQueries.fetchCourseByCode(code);
 		if(course == null) {
 			System.out.println("Course not found!!");
@@ -134,13 +151,14 @@ public class InstructorMenu {
 			System.out.println("5. Enroll student");
 			System.out.println("6. Drop student");
 			System.out.println("7. View report");
-			int choice = Integer.valueOf(InputScanner.getScanner().nextLine());
+			int choice = InputScanner.scanInt();
 			switch(choice) {
 			case 0: return;
 			case 1: 
 				viewExerciseDetails(course.getCourse_id());
 				break;
 			case 2:
+				addExercise(course.getCourse_id());
 				break;
 			case 3:
 				viewTAs(course.getCourse_id());
@@ -148,21 +166,21 @@ public class InstructorMenu {
 			case 4: 
 			{
 				System.out.println("Enter TA id you want to add to this course: ");
-				String ta = InputScanner.getScanner().nextLine();
+				String ta = InputScanner.scanString();
 				addTAsToCourse(course.getCourse_id(), ta);
 				break;
 			}
 			case 5: 
 			{
 				System.out.println("Enter Student id you want to enroll in this course: ");
-				String student = InputScanner.getScanner().nextLine();
+				String student = InputScanner.scanString();
 				enrollStudentInCourse(student, course.getCourse_id());
 				break;
 			}
 			case 6: 
 			{ 
 				System.out.println("Enter Student id you want to drop from this course: ");
-				String student = InputScanner.getScanner().nextLine();
+				String student = InputScanner.scanString();
 				dropStudentFromCourse(student, course.getCourse_id());
 				break;
 			}
@@ -183,7 +201,7 @@ public class InstructorMenu {
 		else {
 			System.out.println("Valid exercise ids for this course are " + Arrays.toString(ids.toArray()));
 			System.out.println("Enter which one you want to view: ");
-			int choice = Integer.valueOf(InputScanner.getScanner().nextLine());
+			int choice = InputScanner.scanInt();
 			Homework hw = FetchQueries.getExerciseByID(choice);
 			if(hw == null) System.out.println("Wrong input!");
 			else {
@@ -193,6 +211,42 @@ public class InstructorMenu {
 		}
 	}
 	
+	void addExercise(int course_id) {
+		Homework hw = new Homework();
+		
+		hw.setCourseId(course_id);
+		
+		System.out.print("Enter exercise id: ");
+		int id = InputScanner.scanInt();
+		hw.setHomeworkId(id);
+		
+		System.out.println("Enter exercise name: ");;
+		String name = InputScanner.scanString();
+		hw.setName(name);
+		
+		System.out.println("Enter posted date (YYYY-MM-DD HH:MM:SS): ");;
+		String pdate = InputScanner.scanString();
+		hw.setPostedDate(pdate);
+		
+		System.out.println("Enter deadline (YYYY-MM-DD HH:MM:SS): ");;
+		String deadline = InputScanner.scanString();
+		hw.setDeadline(deadline);
+		
+		System.out.println("Enter allowed attempts: ");;
+		int attempts = InputScanner.scanInt();
+		hw.setAllowedAttempts(attempts);
+		
+		System.out.println("Enter correct points: ");;
+		int correctPoints = InputScanner.scanInt();
+		hw.setCorrectPoints(correctPoints);
+		
+		System.out.println("Enter incorrect points: ");;
+		int incorrectPoints = InputScanner.scanInt();
+		hw.setIncorrectPoints(incorrectPoints);
+		
+		UpdateQueries.addHomework(hw);
+	}
+	
 	void viewTAs(int course_id) {
 		List<String> tas = FetchQueries.getTAsForCourse(course_id);
 		System.out.println("TAs for this course are: " + Arrays.toString(tas.toArray()));
@@ -200,27 +254,15 @@ public class InstructorMenu {
 	
 	void addTAsToCourse(int course_id, String ta) {
 		
-		if(UpdateQueries.addTAToCourse(ta, course_id)) {
-			System.out.println("Success!");
-		} else {
-			System.out.println("Something went wrong, maybe the TA doesn't exist, try again!");
-		}
+		UpdateQueries.addTAToCourse(ta, course_id);
 	}
 	
 	void enrollStudentInCourse(String student, int course_id) {
-		if(UpdateQueries.addStudentToCourse(student, course_id)) {
-			System.out.println("Success!");
-		} else {
-			System.out.println("Something went wrong, maybe the student doesn't exist, try again!");
-		}
+		UpdateQueries.addStudentToCourse(student, course_id);
 	}
 	
 	void dropStudentFromCourse(String student, int course_id) {
-		if(UpdateQueries.dropStudentFromCourse(student, course_id)) {
-			System.out.println("Success!");
-		} else {
-			System.out.println("Something went wrong, maybe the student doesn't exist, try again!");
-		}
+		UpdateQueries.dropStudentFromCourse(student, course_id);
 	}
 	
 	void viewReport(int courseid) {

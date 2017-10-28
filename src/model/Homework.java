@@ -14,6 +14,10 @@ public class Homework {
 	int incorrectPoints;
 	int courseId;
 	
+	public Homework() {
+		
+	}
+	
 	public Homework(ResultSet result) throws SQLException {
 		homeworkId = result.getInt("homework_id");
 		allowedAttempts = result.getInt("allowed_attempts");

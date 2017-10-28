@@ -25,7 +25,11 @@ public class StringUtils {
 			"SELECT t.ta_id as ta_id "
 			+ "FROM teaching_assistant_assists t, teaching_assistant ta "
 			+ "where t.ta_id = ta.ta_id and t.course_id = ?";
-	
+	public static final String REMOVE_QUESTION_FROM_EXERCISE = "delete from homework_question_bank "
+			+ "where homework_id = ? and question_bank_id in ( "
+			+ "select h.homework_id "
+			+ "from homework_question_bank h, question_bank qb, question q "
+			+ "where q.question_id = ? and q.question_id = qb.question_id and qb.question_bank_id = h.question_bank_id)";
 	
 	
 	/** STUDENTS **/
@@ -51,13 +55,18 @@ public class StringUtils {
 	
 	/** COURSE **/
 	// Add TA to course
-	public static final String ADD_TA_TO_COURSE = "INSERT into teaching_assistant_assists values (?, ?)";
+	public static final String ADD_TA_TO_COURSE = "INSERT into teaching_assistant_assists(ta_id, course_id) values (?, ?)";
 	
 	// Add Student to course
-	public static final String ADD_STUDENT_TO_COURSE = "INSERT into enrollment values (?, ?)";
+	public static final String ADD_STUDENT_TO_COURSE = "INSERT into enrollment(student_id, course_id) values (?, ?)";
 	
 	// Drop student from course
 	public static final String DROP_STUDENT_FROM_COURSE = "DELETE FROM enrollment where student_id = ? and course_id = ?";
+	
+	// Add homework
+	public static final String ADD_HOMEWORK = "INSERT into "
+			+ "homework(homework_id, name, posted_date, deadline, allowed_attempts, correct_points, incorrect_points, course_id) "
+			+ "values(?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	// Get report for course
 	public static final String GET_REPORT_FOR_COURSE = 

@@ -197,12 +197,13 @@ public class FetchQueries {
 	public static void close(Connection connection) {
 		try {
 			connection.close();
-			} catch (SQLException e) {
-				System.out.println("Failed to close connection");
-			}
+		} catch (SQLException e) {
+			System.out.println("Failed to close connection");
+		}
 	}
 	
-	public static Student getStudentDetails(Connection connection, User user) {
+	public static Student getStudentDetails(User user) {
+		Connection connection = new ConnectionManager().getConnection();
 		Student stu = null;
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_STUDENTS);
@@ -223,7 +224,8 @@ public class FetchQueries {
 		return stu;
 	}
 	
-	public static List<Course> getCoursesByStudent(Connection connection, User user) {
+	public static List<Course> getCoursesByStudent(User user) {
+		Connection connection = new ConnectionManager().getConnection();
 		List <Course> cList = new ArrayList<>();
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES_BY_STUDENTS);
@@ -244,7 +246,8 @@ public class FetchQueries {
 		return cList;
 	}
 	
-	public static List<Homework> getPastExercisesByCourse(Connection connection, User user, Course course) {
+	public static List<Homework> getPastExercisesByCourse(User user, Course course) {
+		Connection connection = new ConnectionManager().getConnection();
 		List <Homework> hList = new ArrayList<>();
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_PAST_EXERCISES_BY_COURSE);
@@ -266,7 +269,8 @@ public class FetchQueries {
 		return hList;
 	}
 	
-	public static List<Homework> getCurrentExercisesByCourse(Connection connection, User user, Course course) {
+	public static List<Homework> getCurrentExercisesByCourse(User user, Course course) {
+		Connection connection = new ConnectionManager().getConnection();
 		List <Homework> hList = new ArrayList<>();
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_CURRENT_EXERCISES_BY_COURSE);
@@ -289,7 +293,8 @@ public class FetchQueries {
 		return hList;
 	}
 	
-	public static Report getReportByExercise(Connection connection, User user, Homework hw) {
+	public static Report getReportByExercise(User user, Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
 		Report report = null;
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_REPORT_BY_EXERCISE);
@@ -308,10 +313,11 @@ public class FetchQueries {
 		} finally {
 			close(connection);
 		}
-		return report ;
+		return report;
 	}
 	
-	public static List<QuestionFeedback> getHwFeedback(Connection connection, User user, Homework hw) {
+	public static List<QuestionFeedback> getHwFeedback(User user, Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
 		List<QuestionFeedback> hwFeedback = new ArrayList<>();
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_EXERCISE_FEEDBACK);
