@@ -3,6 +3,8 @@ package connection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import model.Course;
 import model.Homework;
 import model.User;
 import utils.StringUtils;
@@ -15,6 +17,30 @@ public class UpdateQueries {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.ADD_TA_TO_COURSE);
 			pst.setString(1, ta);
 			pst.setInt(2, course);
+			int result = pst.executeUpdate();
+			if(result == 0) {
+				System.out.println("Some unknown error occured");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+		System.out.println("Success!");
+	}
+	
+	public static void addCourse(Course course) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.ADD_COURSE);
+			pst.setInt(1, course.getCourse_id());
+			pst.setString(2, course.getName());
+			pst.setString(3, course.getCourseCode());
+			pst.setString(4, course.getDepartment());
+			pst.setInt(5, course.getMax_students_allowed());
+			pst.setString(6, course.getLevel());
+			pst.setString(7, course.getStartDate());
+			pst.setString(8, course.getEndDate());
 			int result = pst.executeUpdate();
 			if(result == 0) {
 				System.out.println("Some unknown error occured");
@@ -61,23 +87,6 @@ public class UpdateQueries {
 			close(connection);
 		}
 		System.out.println("Success!");
-	}
-	
-	public static void removeQuestionFromExercise(int exercise_id, int question_id) {
-		Connection connection = new ConnectionManager().getConnection();
-		try {
-			PreparedStatement pst = connection.prepareStatement(StringUtils.REMOVE_QUESTION_FROM_EXERCISE);
-			pst.setInt(1, exercise_id);
-			pst.setInt(2, question_id);
-			int result = pst.executeUpdate();
-			if(result == 0) {
-				System.out.println("Some unknown error occured");
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			close(connection);
-		}
 	}
 
 	public static void addHomework(Homework hw) {

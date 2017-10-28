@@ -5,19 +5,21 @@ import java.sql.SQLException;
 public class Course {
 	
 	int course_id;
+	int max_students_allowed;
 	String name;
 	String courseCode;
 	String department;
 	String level;
 	String startDate;
 	String endDate;
-
+	
 	public void print() {
 		System.out.println("************COURSE DETAILS************");
 		System.out.println("Name: " + name);
 		System.out.println("Code: " + courseCode);
 		System.out.println("Dept: " + department);
 		System.out.println("Level: " + level);
+		System.out.println("Max Students Allowed: " + max_students_allowed);
 		System.out.println("Start date: " + startDate);
 		System.out.println("End date: " + endDate);
 	}
@@ -30,8 +32,22 @@ public class Course {
 		level = result.getString("level");
 		startDate = result.getString("start_date");
 		endDate = result.getString("end_date");
+		max_students_allowed = result.getInt("max_students_allowed");
 	}
 	
+	
+	public Course() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getMax_students_allowed() {
+		return max_students_allowed;
+	}
+
+	public void setMax_students_allowed(int max_students_allowed) {
+		this.max_students_allowed = max_students_allowed;
+	}
+
 	public int getCourse_id() {
 		return course_id;
 	}
