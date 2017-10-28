@@ -41,6 +41,7 @@ public class InstructorMenu {
 				viewCourses();
 				break;
 			case 3:
+				addCourse();
 				break;
 			case 4:
 			{
@@ -97,15 +98,7 @@ public class InstructorMenu {
 			case 11:
 				break;
 			case 12:
-			{
-				System.out.println("Enter exercise id: ");
-				int exercise_id = InputScanner.scanInt();
-				System.out.println("Enter question id: ");
-				int question_id = InputScanner.scanInt();
-				removeQuestionFromExercise(exercise_id, question_id);
 				break;
-			}
-				
 			case 13:
 				Session.logOut();
 				flag = false;
@@ -121,9 +114,6 @@ public class InstructorMenu {
 		
 	}
 	
-	void removeQuestionFromExercise(int exercise_id, int question_id) {
-		UpdateQueries.removeQuestionFromExercise(exercise_id, question_id);
-	}
 	
 	void viewProfile() {
 		User user = Session.getUser();
@@ -193,6 +183,27 @@ public class InstructorMenu {
 			}
 		}
 		
+	}
+	
+	void addCourse() {
+		Course course = new Course();
+		System.out.println("Enter id: ");
+		course.setCourse_id(InputScanner.scanInt());
+		System.out.println("Enter name: ");
+		course.setName(InputScanner.scanString());
+		System.out.println("Enter code: ");
+		course.setCourseCode(InputScanner.scanString());
+		System.out.println("Enter dept: ");
+		course.setDepartment(InputScanner.scanString());
+		System.out.println("Enter start date (YYYY-MM-DD HH:MM:SS) ");
+		course.setStartDate(InputScanner.scanString());
+		System.out.println("Enter end date (YYYY-MM-DD HH:MM:SS) ");
+		course.setEndDate(InputScanner.scanString());
+		System.out.println("Enter level (UG/Grad): ");
+		course.setLevel(InputScanner.scanString());
+		System.out.println("Enter max students allowed: ");
+		course.setMax_students_allowed(InputScanner.scanInt());
+		UpdateQueries.addCourse(course);
 	}
 	
 	void viewExerciseDetails(int course_id) {

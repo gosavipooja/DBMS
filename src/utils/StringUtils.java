@@ -87,5 +87,9 @@ public class StringUtils {
 														+ " JOIN homework as hw ON atm.homework_id=hw.homework_id"
 														+ " WHERE atm.student_id = ? AND atm.homework_id = ?"
 														+ " ORDER BY atm.attempt_id, question";
+	
+	public static final String ADD_COURSE = "INSERT into "
+			+ "course(course_id, name, course_code, department, max_students_allowed, level, start_date, end_date) "
+			+ "values(?,?,?,?,?,?,?,?)";
 
 }
