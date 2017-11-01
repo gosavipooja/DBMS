@@ -91,5 +91,13 @@ public class StringUtils {
 	public static final String ADD_COURSE = "INSERT into "
 			+ "course(course_id, name, course_code, department, max_students_allowed, level, start_date, end_date) "
 			+ "values(?,?,?,?,?,?,?,?)";
+	public static final String GET_QUESTIONS = "SELECT que.question_id, que.text, que.difficulty_level, que.hint, que.topic_id, que.detailed_explanation, que.is_parametrized\n" + 
+			"FROM question que\n" + 
+			"INNER JOIN question_bank qubnk on que.question_id = qubnk.question_id\n" + 
+			"INNER JOIN homework_question_bank hwqbnk on hwqbnk.question_bank_id = qubnk.question_bank_id\n" + 
+			"INNER JOIN homework hw on hw.homework_id = hwqbnk.homework_id\n" + 
+			"INNER JOIN course crs on hw.course_id = crs.course_id\n" + 
+			"INNER JOIN instructor_teaches intch on intch.course_id = crs.course_id\n" + 
+			"WHERE intch.instructor_id = ? and que.text like ?";
 
 }

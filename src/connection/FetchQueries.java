@@ -338,5 +338,28 @@ public class FetchQueries {
 		}
 		return hwFeedback ;
 	}
+
+	public static ArrayList<Question> fetchQuestionsByKeyword(User user, String keyword) {
+		Connection connection = new ConnectionManager().getConnection();
+		ArrayList<Question> questions = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_QUESTIONS);
+			pst.setString(1, user.getUserId());
+			pst.setString(2, "%" + keyword + "%");
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					questions.add(new Question(result));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return questions;
+	}
 }
  

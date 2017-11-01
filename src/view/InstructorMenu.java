@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import connection.FetchQueries;
@@ -8,6 +9,7 @@ import model.Course;
 import model.CourseReport;
 import model.Homework;
 import model.Instructor;
+import model.Question;
 import model.User;
 import utils.InputScanner;
 import utils.Session;
@@ -94,6 +96,9 @@ public class InstructorMenu {
 			}
 				
 			case 10:
+				System.out.println("Enter a word or part of the question text");
+				String keyword = InputScanner.scanString();
+				showQuestionDetails(keyword);
 				break;
 			case 11:
 				break;
@@ -115,6 +120,15 @@ public class InstructorMenu {
 	}
 	
 	
+	private void showQuestionDetails(String keyword) {
+		User user = Session.getUser();
+		ArrayList<Question> questions = FetchQueries.fetchQuestionsByKeyword(user, keyword);
+		for(int idx = 0; idx<questions.size(); idx++) {
+			questions.get(idx).print();
+		}
+	}
+
+
 	void viewProfile() {
 		User user = Session.getUser();
 		Instructor instr = FetchQueries.getInstructorDetails(user);
