@@ -18,7 +18,8 @@ public class StringUtils {
 	//Obtain instructor details
 	public static final String GET_INSTRUCTORS = "SELECT * FROM instructor instr where instr.instructor_id = ?";
 	//Obtain all courses
-	public static final String GET_COURSES = "SELECT * FROM course where course_code = ?";
+	public static final String GET_COURSES_FOR_INSTRUCTOR = "SELECT * FROM course c, instructor_teaches i where "
+			+ "c.course_id = i.course_id and i.instructor_id = ?";
 	public static final String GET_EXERCISE_BY_COURSE = "SELECT * FROM homework where course_id = ?";
 	public static final String GET_EXERCISE_BY_ID = "SELECT * FROM homework where homework_id = ?";
 	public static final String GET_TA_FOR_COURSE = 
