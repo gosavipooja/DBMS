@@ -122,14 +122,35 @@ public class InstructorMenu {
 	}
 	
 	void viewCourses() {
-		System.out.println("Enter course code: ");
-		String code = InputScanner.scanString();
-		Course course = FetchQueries.fetchCourseByCode(code);
-		if(course == null) {
-			System.out.println("Course not found!!");
+		List<Course> courses = FetchQueries.fetchCourses();
+		if(courses.size() == 0) {
+			System.out.println("No courses for this instructor!");
 			return;
 		}
-		course.print();
+		System.out.format("%15s%25s%25s%25s", "Course id", "Name", "Start", "End");
+		System.out.println();
+		for(Course course: courses) {
+			System.out.format("%15s%25s%25s%25s", course.getCourse_id(), course.getName(), course.getStartDate(), course.getEndDate());
+		}
+		System.out.println();
+		System.out.println("Enter course id to see more details or -1 to return");
+		int id = InputScanner.scanInt();
+		if(id == -1) return;
+		
+		Course course = null;
+		for(Course scourse: courses) {
+			if(scourse.getCourse_id() == id) course = scourse;
+		} 
+		
+		if(course == null) {
+			System.out.println("You entered incorrect id");
+			return;
+		} else {
+			viewCourseDetails(course);
+		}
+	}
+	
+	void viewCourseDetails(Course course) {
 		
 		while(true) {
 			System.out.println("************COURSE MENU************");

@@ -10,6 +10,7 @@ import java.util.List;
 import model.*;
 import utils.StringUtils;
 import utils.DateUtils;
+import utils.Session;
 
 public class FetchQueries {
 	
@@ -89,23 +90,22 @@ public class FetchQueries {
 		return ta;
 	}
 	
-	public static Course fetchCourseByCode(String code) {
-		Course course = null;
+	public static List<Course> fetchCourses() {
+		List<Course> courses = new ArrayList<Course>();
 		Connection connection = new ConnectionManager().getConnection();
 		try {
-			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES);
-			pst.setString(1, code);
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES_FOR_INSTRUCTOR);
+			pst.setString(1, Session.getUser().getUserId());
 			ResultSet result = pst.executeQuery();
 			while(result.next()) {
-				course = new Course(result);
+				courses.add(new Course(result));
 			}
 		} catch (SQLException e) {
-			System.out.println("Failed to fetch the course!! "+e.getMessage());
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} finally {
 			close(connection);
 		}
-		return course;
+		return courses;
 	}
 	
 	public static User fetchLoginUser (String username, String password) {
