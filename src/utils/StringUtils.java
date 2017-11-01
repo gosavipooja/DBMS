@@ -18,6 +18,7 @@ public class StringUtils {
 	//Obtain instructor details
 	public static final String GET_INSTRUCTORS = "SELECT * FROM instructor instr where instr.instructor_id = ?";
 	//Obtain all courses
+	public static final String CHECK_IF_COURSE_ID_ALLOWED = "SELECT course_id from instructor_teaches where course_id = ? and instructor_id = ?";
 	public static final String GET_COURSES_FOR_INSTRUCTOR = "SELECT * FROM course c, instructor_teaches i where "
 			+ "c.course_id = i.course_id and i.instructor_id = ?";
 	public static final String GET_EXERCISE_BY_COURSE = "SELECT * FROM homework where course_id = ?";
@@ -92,5 +93,7 @@ public class StringUtils {
 	public static final String ADD_COURSE = "INSERT into "
 			+ "course(course_id, name, course_code, department, max_students_allowed, level, start_date, end_date) "
 			+ "values(?,?,?,?,?,?,?,?)";
+	
+	public static final String ADD_COURSE_INSTRUCTOR = "INSERT INTO instructor_teaches(course_id, instructor_id) values(?, ?)";
 
 }

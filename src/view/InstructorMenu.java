@@ -206,6 +206,7 @@ public class InstructorMenu {
 		
 	}
 	
+	
 	void addCourse() {
 		Course course = new Course();
 		System.out.println("Enter id: ");
@@ -228,6 +229,7 @@ public class InstructorMenu {
 	}
 	
 	void viewExerciseDetails(int course_id) {
+		if(!FetchQueries.checkIfCourseAllowed(course_id)) return;
 		List<Integer> ids = FetchQueries.getExerciseIDsForCourse(course_id);
 		if(ids.isEmpty()) System.out.println("No exercises exist for this course or the course doesnt exist, sorry!!");
 		else {
@@ -244,6 +246,7 @@ public class InstructorMenu {
 	}
 	
 	void addExercise(int course_id) {
+		if(!FetchQueries.checkIfCourseAllowed(course_id)) return;
 		Homework hw = new Homework();
 		
 		hw.setCourseId(course_id);
@@ -285,19 +288,22 @@ public class InstructorMenu {
 	}
 	
 	void addTAsToCourse(int course_id, String ta) {
-		
+		if(!FetchQueries.checkIfCourseAllowed(course_id)) return;
 		UpdateQueries.addTAToCourse(ta, course_id);
 	}
 	
 	void enrollStudentInCourse(String student, int course_id) {
+		if(!FetchQueries.checkIfCourseAllowed(course_id)) return;
 		UpdateQueries.addStudentToCourse(student, course_id);
 	}
 	
 	void dropStudentFromCourse(String student, int course_id) {
+		if(!FetchQueries.checkIfCourseAllowed(course_id)) return;
 		UpdateQueries.dropStudentFromCourse(student, course_id);
 	}
 	
 	void viewReport(int courseid) {
+		if(!FetchQueries.checkIfCourseAllowed(courseid)) return;
 		List<CourseReport> reports = FetchQueries.getReportsForCourse(courseid);
 		CourseReport.printHeader();
 		for(CourseReport report: reports) {
@@ -305,4 +311,5 @@ public class InstructorMenu {
 		}
 			
 	}
+	
 }

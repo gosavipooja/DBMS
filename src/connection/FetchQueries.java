@@ -108,6 +108,27 @@ public class FetchQueries {
 		return courses;
 	}
 	
+	public static boolean checkIfCourseAllowed(int course_id) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.CHECK_IF_COURSE_ID_ALLOWED);
+			pst.setInt(1, course_id);
+			pst.setString(2, Session.getUser().getUserId());
+			ResultSet result = pst.executeQuery();
+			if(result == null || result.getFetchSize() == 0) {
+				System.out.println("Access to course not allowed.");
+				return false;
+			}
+			else return true;
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+		return false;
+	}
+	
 	public static User fetchLoginUser (String username, String password) {
 		Connection connection = new ConnectionManager().getConnection();
 		User currentUser = null;
