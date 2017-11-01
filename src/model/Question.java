@@ -24,7 +24,6 @@ public class Question {
 	}
 
 	public void print() {
-		System.out.println("************SEARCH RESULTS FOR QUESTIONS************");
 		System.out.println(this.question_id +"\t" + this.text + "\t" + this.difficulty_level + "\t" + this.hint + "\t" + this.topic_id + "\t" + this.detailed_explanation + "\t" + this.is_parametrized);
 	}
 
