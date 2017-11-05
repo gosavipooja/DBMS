@@ -426,5 +426,27 @@ public class FetchQueries {
 		}
 		return questions;
 	}
+	
+	public static List<Integer> fetchDifficultyByQuestions(User user, Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
+		List<Integer> list = new ArrayList<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_DIFFICULTY_BY_QUESTION);
+			pst.setInt(1, hw.getHomeworkId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					list.add(result.getInt("qid"));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return list;
+	}
 }
  

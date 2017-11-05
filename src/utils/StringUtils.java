@@ -109,4 +109,9 @@ public class StringUtils {
 			"WHERE hwqb.question_bank_id=qb.question_bank_id AND homework_id=?) as modi, Gradiance.question_bank as qb, Gradiance.parameter as param, Gradiance.answer as ans, Gradiance.question as q\n" +
 			"WHERE modi.qid=qb.question_id AND modi.pid=qb.parameter_id AND qb.parameter_id=param.parameter_id AND ans.answer_id=qb.answer_id AND modi.qid=q.question_id\n" +
 			"ORDER BY qid";
+	
+	public static final String GET_DIFFICULTY_BY_QUESTION = "SELECT q.question_id as qid, q.difficulty_level as difficulty\n"
+			+ "FROM Gradiance.homework_question_bank as hwqb, Gradiance.question as q, Gradiance.question_bank as qb\n"
+			+ "WHERE homework_id=? AND q.question_id=qb.question_id AND qb.question_bank_id=hwqb.question_bank_id\n"
+			+ "ORDER BY q.difficulty_level";
 }
