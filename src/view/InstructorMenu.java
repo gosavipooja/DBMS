@@ -146,6 +146,7 @@ public class InstructorMenu {
 		System.out.println();
 		for(Course course: courses) {
 			System.out.format("%15s%25s%25s%25s", course.getCourse_id(), course.getName(), course.getStartDate(), course.getEndDate());
+			System.out.println();
 		}
 		System.out.println();
 		System.out.println("Enter course id to see more details or -1 to return");

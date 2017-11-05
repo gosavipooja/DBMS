@@ -38,6 +38,11 @@ public class Student extends User{
 		this.level = level;
 	}
 	
-	
+	public void print() {
+		System.out.println("PROFILE DETAILS");
+		System.out.println("Name: " + getName());
+		System.out.println("Level: " + getLevel());
+		System.out.println("Email: " + getEmail());
+	}
 	
 }

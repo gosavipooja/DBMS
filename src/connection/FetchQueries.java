@@ -108,6 +108,24 @@ public class FetchQueries {
 		return courses;
 	}
 	
+	public static List<Course> fetchCoursesForTA() {
+		List<Course> courses = new ArrayList<Course>();
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_COURSES_FOR_TA);
+			pst.setString(1, Session.getUser().getUserId());
+			ResultSet result = pst.executeQuery();
+			while(result.next()) {
+				courses.add(new Course(result));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+		return courses;
+	}
+	
 	public static boolean checkIfCourseAllowed(int course_id) {
 		Connection connection = new ConnectionManager().getConnection();
 		try {
@@ -126,6 +144,14 @@ public class FetchQueries {
 		} finally {
 			close(connection);
 		}
+		return false;
+	}
+	
+	public static boolean checkIfCourseAllowedForTA(int course_id) {
+		List<Course> courses = fetchCoursesForTA();
+		for(Course c: courses) {
+			if(c.getCourse_id() == course_id) return true;
+		} 
 		return false;
 	}
 	
@@ -214,6 +240,8 @@ public class FetchQueries {
 		}
 		return instr;
 	}
+	
+	
 	
 	public static void close(Connection connection) {
 		try {

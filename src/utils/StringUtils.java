@@ -21,12 +21,19 @@ public class StringUtils {
 	public static final String CHECK_IF_COURSE_ID_ALLOWED = "SELECT course_id from instructor_teaches where course_id = ? and instructor_id = ?";
 	public static final String GET_COURSES_FOR_INSTRUCTOR = "SELECT * FROM course c, instructor_teaches i where "
 			+ "c.course_id = i.course_id and i.instructor_id = ?";
+	public static final String GET_COURSES_FOR_TA = "SELECT * FROM course c, teaching_assistant_assists i where "
+			+ "c.course_id = i.course_id and i.ta_id = ?";
 	public static final String GET_EXERCISE_BY_COURSE = "SELECT * FROM homework where course_id = ?";
 	public static final String GET_EXERCISE_BY_ID = "SELECT * FROM homework where homework_id = ?";
 	public static final String GET_TA_FOR_COURSE = 
 			"SELECT t.ta_id as ta_id "
 			+ "FROM teaching_assistant_assists t, teaching_assistant ta "
 			+ "where t.ta_id = ta.ta_id and t.course_id = ?";
+	
+	public static final String GET_COURSE_FOR_TA = 
+			"SELECT c.course_code as code, c.name as name "
+			+ "FROM teaching_assistant_assists t, course c "
+			+ "where t.ta_id = ? and t.course_id = c.course_id";
 	public static final String REMOVE_QUESTION_FROM_EXERCISE = "delete from homework_question_bank "
 			+ "where homework_id = ? and question_bank_id in ( "
 			+ "select h.homework_id "
