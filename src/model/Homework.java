@@ -14,6 +14,7 @@ public class Homework {
 	int incorrectPoints;
 	int courseId;
 	boolean is_adaptive;
+	String scoreSelection;
 	
 	public Homework() {
 		
@@ -29,6 +30,7 @@ public class Homework {
 		postedDate = result.getString("posted_date");
 		deadline = result.getString("deadline");
 		is_adaptive = result.getInt("is_adaptive")==1;
+		scoreSelection = result.getString("score_selection");
 	}
 	
 	public void print() {
