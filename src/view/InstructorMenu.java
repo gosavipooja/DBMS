@@ -123,6 +123,7 @@ public class InstructorMenu {
 	private void showQuestionDetails(String keyword) {
 		User user = Session.getUser();
 		ArrayList<Question> questions = FetchQueries.fetchQuestionsByKeyword(user, keyword);
+		System.out.println("************SEARCH RESULTS FOR QUESTIONS************");
 		for(int idx = 0; idx<questions.size(); idx++) {
 			questions.get(idx).print();
 		}
