@@ -106,6 +106,8 @@ public class UpdateQueries {
 
 	public static void addHomework(Homework hw) {
 		Connection connection = new ConnectionManager().getConnection();
+		int isAdaptive = (hw.isAdaptive())?1:0;
+		
 		try {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.ADD_HOMEWORK);
 			pst.setInt(1, hw.getHomeworkId());
@@ -116,6 +118,7 @@ public class UpdateQueries {
 			pst.setInt(6, hw.getCorrectPoints());
 			pst.setInt(7, hw.getIncorrectPoints());
 			pst.setInt(8, hw.getCourseId());
+			pst.setInt(9, isAdaptive);
 			int result = pst.executeUpdate();
 			if(result == 0) {
 				System.out.println("Some unknown error occured");

@@ -74,8 +74,8 @@ public class StringUtils {
 	
 	// Add homework
 	public static final String ADD_HOMEWORK = "INSERT into "
-			+ "homework(homework_id, name, posted_date, deadline, allowed_attempts, correct_points, incorrect_points, course_id) "
-			+ "values(?, ?, ?, ?, ?, ?, ?, ?)";
+			+ "homework(homework_id, name, posted_date, deadline, allowed_attempts, correct_points, incorrect_points, course_id, is_adaptive) "
+			+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	// Get report for course
 	public static final String GET_REPORT_FOR_COURSE = 

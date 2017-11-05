@@ -295,6 +295,10 @@ public class InstructorMenu {
 		int incorrectPoints = InputScanner.scanInt();
 		hw.setIncorrectPoints(incorrectPoints);
 		
+		System.out.println("Is the test adaptive (y/n)?");
+		int ad = ( (InputScanner.scanString().compareToIgnoreCase("y")==0)?1:0);
+		hw.setAdaptive(ad);
+		
 		UpdateQueries.addHomework(hw);
 	}
 	

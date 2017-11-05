@@ -47,6 +47,10 @@ public class Homework {
 		return is_adaptive;
 	}
 	
+	public void setAdaptive(int x) {
+		is_adaptive = (x==1);
+	}
+	
 	public int getHomeworkId() {
 		return homeworkId;
 	}
