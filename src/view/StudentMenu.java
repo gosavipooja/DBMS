@@ -282,6 +282,8 @@ public class StudentMenu {
 		User user = Session.getUser();
 		Scanner sc = InputScanner.getScanner();
 		
+		int score = 0;
+		
 		//Check for remaining attempts
 		int maxAttemptsExhausted = FetchQueries.fetchAttemptsbyHomework(user, hw);
 		int attemptId = maxAttemptsExhausted + 1;
@@ -349,7 +351,16 @@ public class StudentMenu {
 			//Add the selected option to the attempted list
 			attemptedOpts.add(optList.get(ch-1).getQuestionBankId());
 			
+			if(optList.get(ch-1).isCorrect()) {
+				score += hw.getCorrectPoints();
+			} else {
+				score += hw.getIncorrectPoints();
+			}
+			
 		}
+		
+		//Print score 
+		System.out.println("\n\n Score = "+score);
 		
 		//Update attempts table
 		
@@ -363,6 +374,7 @@ public class StudentMenu {
 		//Check for remaining attempts
 		int maxAttemptsExhausted = FetchQueries.fetchAttemptsbyHomework(user, hw);
 		int attemptId = maxAttemptsExhausted + 1;
+		int score = 0;
 		
 		if(maxAttemptsExhausted >= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
 			System.out.println("\n\n"+(hw.getAllowedAttempts()-maxAttemptsExhausted)+" attempt(s) remaining for this homework");
@@ -451,8 +463,17 @@ public class StudentMenu {
 				// Pick question with equal or more difficulty level
 				index = Math.min(sortedQs.size()-1, index);
 			}
+			
+			if(optList.get(ch-1).isCorrect()) {
+				score += hw.getCorrectPoints();
+			} else {
+				score += hw.getIncorrectPoints();
+			}
 		}
 		
+		//Print score 
+		System.out.println("\n\nScore = "+score);
+				
 		//Update attempts table
 		
 	}
