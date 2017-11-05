@@ -73,8 +73,21 @@ public class Login {
 					// For student
 					new StudentMenu().showMenu();
 				} else{
-					// TODO: Provide user with option to see options as a TA or Student
-					new TAMenu().showMenu();
+					
+					System.out.println("You are both a TA and a student. Select your view:");
+					System.out.println("1. Student");
+					System.out.println("2. TA");
+					System.out.println("default: exit");
+					int choice = InputScanner.scanInt();
+					switch(choice) {
+					case 1:
+						new StudentMenu().showMenu();
+						break;
+					case 2: 
+						new TAMenu().showMenu();
+						break;
+					default: break;
+					}
 				}
 			}
 		}
