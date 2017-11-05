@@ -3,6 +3,7 @@ package connection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import model.Course;
 import model.Homework;
@@ -151,6 +152,25 @@ public class UpdateQueries {
 			PreparedStatement pst = connection.prepareStatement(StringUtils.UPDATE_USER_PASSWORD);
 			pst.setString(1, passwd);
 			pst.setString(2, user.getUserId());
+			int result = pst.executeUpdate();
+			if(result == 0) {
+				System.out.println("Some issue....");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+	}
+	
+	public static void updateAttempts(User user, int qbId, Homework hw, int attemptID) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.UPDATE_ATTEMPT);
+			pst.setString(1, user.getUserId());
+			pst.setInt(2, hw.getHomeworkId());
+			pst.setInt(3, qbId);
+			pst.setInt(4, attemptID);
 			int result = pst.executeUpdate();
 			if(result == 0) {
 				System.out.println("Some issue....");

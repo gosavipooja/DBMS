@@ -126,5 +126,7 @@ public class StringUtils {
 			+ "FROM Gradiance.homework_question_bank as hwqb, Gradiance.question as q, Gradiance.question_bank as qb\n"
 			+ "WHERE homework_id=? AND q.question_id=qb.question_id AND qb.question_bank_id=hwqb.question_bank_id\n"
 			+ "ORDER BY q.difficulty_level";
-
+	
+	//Update Attempts table
+	public static final String UPDATE_ATTEMPT = "INSERT INTO Gradiance.attempt (student_id, homework_id, question_bank_id, attempt_id) VALUES (?, ?, ?, ?)";
 }

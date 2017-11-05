@@ -288,7 +288,7 @@ public class StudentMenu {
 		int maxAttemptsExhausted = FetchQueries.fetchAttemptsbyHomework(user, hw);
 		int attemptId = maxAttemptsExhausted + 1;
 		
-		if(maxAttemptsExhausted >= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
+		if(maxAttemptsExhausted <= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
 			System.out.println("\n\n"+(hw.getAllowedAttempts()-maxAttemptsExhausted)+" attempt(s) remaining for this homework");
 		}
 		else if(hw.getAllowedAttempts() < 0) {
@@ -363,6 +363,10 @@ public class StudentMenu {
 		System.out.println("\n\n Score = "+score);
 		
 		//Update attempts table
+		//Update attempts table
+		for(Integer qbid: attemptedOpts){
+			UpdateQueries.updateAttempts(user,qbid,hw,attemptId);
+		}
 		
 	}
 	
@@ -376,7 +380,7 @@ public class StudentMenu {
 		int attemptId = maxAttemptsExhausted + 1;
 		int score = 0;
 		
-		if(maxAttemptsExhausted >= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
+		if(maxAttemptsExhausted <= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
 			System.out.println("\n\n"+(hw.getAllowedAttempts()-maxAttemptsExhausted)+" attempt(s) remaining for this homework");
 		}
 		else if(hw.getAllowedAttempts() < 0) {
@@ -475,7 +479,9 @@ public class StudentMenu {
 		System.out.println("\n\nScore = "+score);
 				
 		//Update attempts table
-		
+		for(Integer qbid: attemptedOpts){
+			UpdateQueries.updateAttempts(user,qbid,hw,attemptId);
+		}
 	}
 	
 	
