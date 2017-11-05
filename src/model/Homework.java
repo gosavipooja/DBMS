@@ -13,6 +13,7 @@ public class Homework {
 	int correctPoints;
 	int incorrectPoints;
 	int courseId;
+	boolean is_adaptive;
 	
 	public Homework() {
 		
@@ -27,6 +28,7 @@ public class Homework {
 		name = result.getString("name");
 		postedDate = result.getString("posted_date");
 		deadline = result.getString("deadline");
+		is_adaptive = result.getInt("is_adaptive")==1;
 	}
 	
 	public void print() {
@@ -39,6 +41,9 @@ public class Homework {
 		System.out.println("Incorrect points: "+ incorrectPoints);
 	}
 	
+	public boolean isAdaptive() {
+		return is_adaptive;
+	}
 	
 	public int getHomeworkId() {
 		return homeworkId;

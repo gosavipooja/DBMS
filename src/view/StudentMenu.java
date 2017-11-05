@@ -1,6 +1,9 @@
 package view;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -258,11 +261,223 @@ public class StudentMenu {
 		}
 	}
 	
+	private List<QuizQuestion> randomlyPickOptions(List<QuizQuestion> q){
+		Collections.shuffle(q);
+		List<QuizQuestion> qs = new ArrayList<>();
+		for(int i =0; i < Math.min(q.size(), 4); i++) {
+			qs.add(q.get(i));
+		}
+		return qs;
+	}
+	
 	private void attemptHw(Homework hw) {
+		if(hw.isAdaptive()) {
+			attemptAdaptiveHw(hw);
+		} else {
+			attemptNonAdaptiveHw(hw);
+		}
+	}
+	
+	private void attemptNonAdaptiveHw(Homework hw) {
+		User user = Session.getUser();
+		Scanner sc = InputScanner.getScanner();
+		
+		int score = 0;
+		
+		//Check for remaining attempts
+		int maxAttemptsExhausted = FetchQueries.fetchAttemptsbyHomework(user, hw);
+		int attemptId = maxAttemptsExhausted + 1;
+		
+		if(maxAttemptsExhausted >= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
+			System.out.println("\n\n"+(hw.getAllowedAttempts()-maxAttemptsExhausted)+" attempt(s) remaining for this homework");
+		}
+		else if(hw.getAllowedAttempts() < 0) {
+			System.out.println("\n\nUnlimited attempts remaining for the homework");
+		}
+		else {
+			System.out.println("\n\nYou have exhausted the maximum possible attempts for this homework");
+			return;
+		}
+		
 		System.out.println("\n\n***** Attempting "+hw+" *****");
 		System.out.println("Max attempts allowed = " + ((hw.getAllowedAttempts()<0)?"Unlimited":hw.getAllowedAttempts()) );
 		System.out.println("Points for correct answer = "+hw.getCorrectPoints());
 		System.out.println("Points for incorrect answer = "+hw.getIncorrectPoints());
+		System.out.println("Enter 0 at any point to cancel the quiz");
+		System.out.println("\n\n");
+		
+		//Get the list of questions
+		HashMap<Integer,List<QuizQuestion>> questions = FetchQueries.fetchQuestionsByHomework(user,hw);
+		
+		List<Integer> attemptedOpts= new ArrayList<>();
+		
+		
+		int counter = 1;
+		for(Integer qid : questions.keySet()) {
+			List <QuizQuestion> optList = randomlyPickOptions(questions.get(qid));
+			
+			//Print Question 
+			System.out.println("\nQ"+(counter++)+". "+optList.get(0).getQuestionText());
+			
+			//Print if any params
+			if(optList.get(0).isParam()) {
+				System.out.print("Params: ");
+				System.out.print(optList.get(0).getP1()+", ");
+				System.out.print(optList.get(0).getP2()+", ");
+				System.out.print(optList.get(0).getP3()+", ");
+				System.out.print(optList.get(0).getP4()+", ");
+				System.out.println(optList.get(0).getP5());
+			}
+			
+			//Print options
+			System.out.println("\nOptions:");
+			for(int i = 0; i<optList.size(); i++) {
+				QuizQuestion qq = optList.get(i);
+				System.out.println(""+(i+1)+". "+qq.getAnswer());
+			}
+			
+			//Get user choice
+			int ch = -1;
+			while (ch<0 || ch >optList.size()) {
+				System.out.println("\nEnter your choice (0 to cancel the quiz):");
+				ch = sc.nextInt();
+			}
+			
+			//Exit from quiz
+			if(ch==0) {
+				return;
+			}
+			
+			//Add the selected option to the attempted list
+			attemptedOpts.add(optList.get(ch-1).getQuestionBankId());
+			
+			if(optList.get(ch-1).isCorrect()) {
+				score += hw.getCorrectPoints();
+			} else {
+				score += hw.getIncorrectPoints();
+			}
+			
+		}
+		
+		//Print score 
+		System.out.println("\n\n Score = "+score);
+		
+		//Update attempts table
+		
 	}
+	
+	
+	private void attemptAdaptiveHw(Homework hw) {
+		User user = Session.getUser();
+		Scanner sc = InputScanner.getScanner();
+		
+		//Check for remaining attempts
+		int maxAttemptsExhausted = FetchQueries.fetchAttemptsbyHomework(user, hw);
+		int attemptId = maxAttemptsExhausted + 1;
+		int score = 0;
+		
+		if(maxAttemptsExhausted >= hw.getAllowedAttempts() && hw.getAllowedAttempts() > 0) {
+			System.out.println("\n\n"+(hw.getAllowedAttempts()-maxAttemptsExhausted)+" attempt(s) remaining for this homework");
+		}
+		else if(hw.getAllowedAttempts() < 0) {
+			System.out.println("\n\nUnlimited attempts remaining for the homework");
+		}
+		else {
+			System.out.println("\n\nYou have exhausted the maximum possible attempts for this homework");
+			return;
+		}
+		
+		System.out.println("\n\n***** Attempting "+hw+" *****");
+		System.out.println("Max attempts allowed = " + ((hw.getAllowedAttempts()<0)?"Unlimited":hw.getAllowedAttempts()) );
+		System.out.println("Points for correct answer = "+hw.getCorrectPoints());
+		System.out.println("Points for incorrect answer = "+hw.getIncorrectPoints());
+		System.out.println("Enter 0 at any point to cancel the quiz");
+		System.out.println("\n\n");
+		
+		//Get the list of questions
+		HashMap<Integer,List<QuizQuestion>> questions = FetchQueries.fetchQuestionsByHomework(user,hw);
+		
+		//Order questions based on difficulty
+		List<Integer> sortedQs = FetchQueries.fetchDifficultyByQuestions(user,hw);
+		
+		
+		List<Integer> attemptedOpts= new ArrayList<>();
+		
+		
+		int counter = 1;
+		
+		//Start with the median difficulty question
+		int index = sortedQs.size()/2;
+		
+		while(!sortedQs.isEmpty()) {
+			
+			int qid = sortedQs.get(index);
+			sortedQs.remove(index);
+			
+			List <QuizQuestion> optList = randomlyPickOptions(questions.get(qid));
+			
+			//Print Question 
+			System.out.println("\nQ"+(counter++)+". "+optList.get(0).getQuestionText());
+			
+			//Print if any params
+			if(optList.get(0).isParam()) {
+				System.out.print("Params: ");
+				System.out.print(optList.get(0).getP1()+", ");
+				System.out.print(optList.get(0).getP2()+", ");
+				System.out.print(optList.get(0).getP3()+", ");
+				System.out.print(optList.get(0).getP4()+", ");
+				System.out.println(optList.get(0).getP5());
+			}
+			
+			//Print options
+			System.out.println("\nOptions:");
+			for(int i = 0; i<optList.size(); i++) {
+				QuizQuestion qq = optList.get(i);
+				System.out.println(""+(i+1)+". "+qq.getAnswer());
+			}
+			
+			//Get user choice
+			int ch = -1;
+			while (ch<0 || ch >optList.size()) {
+				System.out.println("\nEnter your choice (0 to cancel the quiz):");
+				ch = sc.nextInt();
+			}
+			
+			//Exit from quiz
+			if(ch==0) {
+				return;
+			}
+			
+			//Add the selected option to the attempted list
+			attemptedOpts.add(optList.get(ch-1).getQuestionBankId());
+			
+			//Check if the attempted question was right
+			
+			
+			boolean isCorrect  = optList.get(ch-1).isCorrect();
+			
+			if(!isCorrect) {
+				// pick question with less difficulty level
+				index = Math.max(index-1, 0);
+			} else {
+				// Pick question with equal or more difficulty level
+				index = Math.min(sortedQs.size()-1, index);
+			}
+			
+			if(optList.get(ch-1).isCorrect()) {
+				score += hw.getCorrectPoints();
+			} else {
+				score += hw.getIncorrectPoints();
+			}
+		}
+		
+		//Print score 
+		System.out.println("\n\nScore = "+score);
+				
+		//Update attempts table
+		
+	}
+	
+	
 	
 }
