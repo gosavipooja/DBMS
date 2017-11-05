@@ -12,7 +12,7 @@ public class ConnectionManager {
 	public Connection getConnection() {
 		try {
 			 Class.forName("com.mysql.jdbc.Driver"); 
-			 connection = DriverManager.getConnection("jdbc:mysql://gradiance.cl6zfx6ikkho.us-east-2.rds.amazonaws.com:3306/Gradiance",username,password); 
+			 connection = DriverManager.getConnection("jdbc:mysql://gradiance.cfpvmtqensd2.us-east-2.rds.amazonaws.com:3306/Gradiance",username,password); 
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -18,14 +18,22 @@ public class StringUtils {
 	//Obtain instructor details
 	public static final String GET_INSTRUCTORS = "SELECT * FROM instructor instr where instr.instructor_id = ?";
 	//Obtain all courses
+	public static final String CHECK_IF_COURSE_ID_ALLOWED = "SELECT course_id from instructor_teaches where course_id = ? and instructor_id = ?";
 	public static final String GET_COURSES_FOR_INSTRUCTOR = "SELECT * FROM course c, instructor_teaches i where "
 			+ "c.course_id = i.course_id and i.instructor_id = ?";
+	public static final String GET_COURSES_FOR_TA = "SELECT * FROM course c, teaching_assistant_assists i where "
+			+ "c.course_id = i.course_id and i.ta_id = ?";
 	public static final String GET_EXERCISE_BY_COURSE = "SELECT * FROM homework where course_id = ?";
 	public static final String GET_EXERCISE_BY_ID = "SELECT * FROM homework where homework_id = ?";
 	public static final String GET_TA_FOR_COURSE = 
 			"SELECT t.ta_id as ta_id "
 			+ "FROM teaching_assistant_assists t, teaching_assistant ta "
 			+ "where t.ta_id = ta.ta_id and t.course_id = ?";
+	
+	public static final String GET_COURSE_FOR_TA = 
+			"SELECT c.course_code as code, c.name as name "
+			+ "FROM teaching_assistant_assists t, course c "
+			+ "where t.ta_id = ? and t.course_id = c.course_id";
 	public static final String REMOVE_QUESTION_FROM_EXERCISE = "delete from homework_question_bank "
 			+ "where homework_id = ? and question_bank_id in ( "
 			+ "select h.homework_id "
@@ -92,6 +100,10 @@ public class StringUtils {
 	public static final String ADD_COURSE = "INSERT into "
 			+ "course(course_id, name, course_code, department, max_students_allowed, level, start_date, end_date) "
 			+ "values(?,?,?,?,?,?,?,?)";
+
+	
+	public static final String ADD_COURSE_INSTRUCTOR = "INSERT INTO instructor_teaches(course_id, instructor_id) values(?, ?)";
+
 	public static final String GET_QUESTIONS = "SELECT que.question_id, que.text, que.difficulty_level, que.hint, que.topic_id, que.detailed_explanation, que.is_parametrized\n" + 
 			"FROM question que\n" + 
 			"INNER JOIN question_bank qubnk on que.question_id = qubnk.question_id\n" + 
@@ -100,7 +112,7 @@ public class StringUtils {
 			"INNER JOIN course crs on hw.course_id = crs.course_id\n" + 
 			"INNER JOIN instructor_teaches intch on intch.course_id = crs.course_id\n" + 
 			"WHERE intch.instructor_id = ? and que.text like ?";
-	
+
 	public static final String GET_ATTEMPTS_BY_STUDENT = "SELECT MAX(attempt_id) AS numAtmpt FROM Gradiance.attempt WHERE student_id=? AND homework_id=?";
 	
 	public static final String GET_QUESTIONS_BY_HOMEWORK = "SELECT q.question_id as qid,  qb.question_bank_id as qbid, q.text AS quesText, q.detailed_explanation as explanation, q.hint as quesHint, q.difficulty_level AS difficultyLevel, ans.text AS answer, qb.correct AS isCorrect, param.text1 as P1, param.text2 as P2, param.text3 as P3, param.text4 as P4, param.text5 as P5, q.is_parametrized as isParameterized\n" +
@@ -114,4 +126,5 @@ public class StringUtils {
 			+ "FROM Gradiance.homework_question_bank as hwqb, Gradiance.question as q, Gradiance.question_bank as qb\n"
 			+ "WHERE homework_id=? AND q.question_id=qb.question_id AND qb.question_bank_id=hwqb.question_bank_id\n"
 			+ "ORDER BY q.difficulty_level";
+
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import model.Course;
 import model.Homework;
 import model.User;
+import utils.Session;
 import utils.StringUtils;
 
 public class UpdateQueries {
@@ -44,13 +45,26 @@ public class UpdateQueries {
 			int result = pst.executeUpdate();
 			if(result == 0) {
 				System.out.println("Some unknown error occured");
+				return;
 			}
+			
+			PreparedStatement pst2 = connection.prepareStatement(StringUtils.ADD_COURSE_INSTRUCTOR);
+			pst2.setInt(1, course.getCourse_id());
+			pst2.setString(2, Session.getUser().getUserId());
+			int result2 = pst2.executeUpdate();
+			if(result2 == 0) {
+				System.out.println("Some unknown error occured");
+			} else {
+				System.out.println("Success!");
+			}
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
 			close(connection);
 		}
-		System.out.println("Success!");
+		
+		
 	}
 	
 	public static void addStudentToCourse(String student, int course) {
