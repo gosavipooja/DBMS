@@ -145,7 +145,7 @@ public class FetchQueries {
 			pst.setInt(1, course_id);
 			pst.setString(2, Session.getUser().getUserId());
 			ResultSet result = pst.executeQuery();
-			if(result == null || result.getFetchSize() == 0) {
+			if(result == null || !result.next()) {
 				System.out.println("Access to course not allowed.");
 				return false;
 			}
