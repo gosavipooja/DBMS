@@ -5,12 +5,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import model.*;
-import utils.StringUtils;
+import model.Course;
+import model.CourseReport;
+import model.Homework;
+import model.Instructor;
+import model.Question;
+import model.QuestionFeedback;
+import model.QuizQuestion;
+import model.Report;
+import model.Student;
+import model.TeachingAssistant;
+import model.User;
 import utils.DateUtils;
 import utils.Session;
+import utils.StringUtils;
 
 public class FetchQueries {
 	
@@ -352,6 +364,59 @@ public class FetchQueries {
 			}else {
 				while(result != null && result.next()) {
 					questions.add(new Question(result));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return questions;
+	}
+	
+	public static int fetchAttemptsbyHomework(User user, Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
+		int attemptsSoFar = 0;
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_ATTEMPTS_BY_STUDENT);
+			pst.setString(1, user.getUserId());
+			pst.setInt(2, hw.getHomeworkId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				if(result.next()) {
+					attemptsSoFar = result.getInt("numAtmpt");
+				}
+				else {
+					attemptsSoFar = 0;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		
+		return attemptsSoFar;
+	}
+	
+	public static HashMap<Integer,List<QuizQuestion>> fetchQuestionsByHomework(User user, Homework hw) {
+		Connection connection = new ConnectionManager().getConnection();
+		HashMap<Integer,List<QuizQuestion>> questions = new HashMap<>();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.GET_QUESTIONS_BY_HOMEWORK);
+			pst.setInt(1, hw.getHomeworkId());
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					QuizQuestion qq = new QuizQuestion(result);
+					if(!questions.containsKey(qq.getQuestionId())) {
+						questions.put(qq.getQuestionId(), new ArrayList<QuizQuestion>());
+					}
+					questions.get(qq.getQuestionId()).add(qq);
 				}
 			}
 		} catch (SQLException e) {
