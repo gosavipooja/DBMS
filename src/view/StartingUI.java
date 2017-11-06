@@ -15,7 +15,6 @@ public class StartingUI {
 	}
 	
 	public static void beginApplication() {
-		Scanner sc = InputScanner.getScanner();
 		int input = 0;
 		boolean flag = true;
 		while(flag) {
@@ -23,7 +22,7 @@ public class StartingUI {
 			System.out.println("1. Login");
 			System.out.println("2. Exit");
 			System.out.println("Enter Choice: ");
-			input = Integer.valueOf(sc.nextLine());	
+			input = InputScanner.scanInt();	
 			
 			switch (input) {
 			case 1:
