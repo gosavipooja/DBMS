@@ -3,6 +3,7 @@ package connection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Course;
@@ -66,6 +67,27 @@ public class UpdateQueries {
 		}
 		
 		
+	}
+	
+	public static void addQuestionInExecise(User user, int homeworkId, ArrayList<Integer> questionBnkIds) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.ADD_QUESTION_TO_EXERCISE);
+			for(Integer qbId : questionBnkIds) {
+				pst.setInt(1, homeworkId);
+				pst.setInt(2, qbId.intValue());
+				int result = pst.executeUpdate();
+				if(result == 0) {
+					System.out.println("Some unknown error occured");
+				}
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+		System.out.println("Success!");
 	}
 	
 	public static void addStudentToCourse(String student, int course) {

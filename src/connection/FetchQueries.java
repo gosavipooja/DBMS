@@ -497,5 +497,29 @@ public class FetchQueries {
 		}
 		return list;
 	}
+
+	public static boolean checkIfValidHomework(User user, int homeworkId) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.CHECK_HOMEWORK_FOR_INSTRUCTOR);
+			pst.setString(1, user.getUserId());
+			pst.setInt(2, homeworkId);
+			ResultSet result = pst.executeQuery();
+			if(result == null) {
+				System.out.println("Some issue....");
+			}else {
+				while(result != null && result.next()) {
+					if(result.getInt("homework_id") == homeworkId) {
+						return true;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to check from db");
+		} finally {
+			close(connection);
+		}
+		return false;
+	}
 }
  

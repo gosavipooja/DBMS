@@ -101,6 +101,25 @@ public class InstructorMenu {
 				showQuestionDetails(keyword);
 				break;
 			case 11:
+				System.out.println("*************************\nEnter Exercise ID for which you want to add questions");
+				int homeworkId = InputScanner.scanInt();
+				// Check if the homework is valid for this instructor
+				if(!checkIfVaildHomework(homeworkId)) {
+					System.out.println("Insufficient privilleges to modify this exercise, exercise does not belong to you");
+					break;
+				}
+				// If vaild ask for question ids
+				ArrayList<Integer> questionBnkIds = new ArrayList<>();
+				while(true) {
+					System.out.println("Enter question id to add new question or type 'done' to stop adding question");
+					String quesChoice = InputScanner.scanString();
+					if (quesChoice.equalsIgnoreCase("done")) {
+						addQuestionToExercise(homeworkId, questionBnkIds);
+						break;
+					} else {
+						questionBnkIds.add(Integer.parseInt(quesChoice));
+					}
+				}	
 				break;
 			case 12:
 				break;
@@ -120,6 +139,18 @@ public class InstructorMenu {
 	}
 	
 	
+	private boolean checkIfVaildHomework(int homeworkId) {
+		User user = Session.getUser();
+		return FetchQueries.checkIfValidHomework(user, homeworkId);
+	}
+
+
+	private void addQuestionToExercise(int homeworkId, ArrayList<Integer> questionBnkId) {
+		User user = Session.getUser();
+		UpdateQueries.addQuestionInExecise(user, homeworkId, questionBnkId);
+	}
+
+
 	private void showQuestionDetails(String keyword) {
 		User user = Session.getUser();
 		ArrayList<Question> questions = FetchQueries.fetchQuestionsByKeyword(user, keyword);

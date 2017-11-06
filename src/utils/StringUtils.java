@@ -77,6 +77,9 @@ public class StringUtils {
 			+ "homework(homework_id, name, posted_date, deadline, allowed_attempts, correct_points, incorrect_points, course_id, is_adaptive) "
 			+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
+	// Add question to homework
+	public static final String ADD_QUESTION_TO_EXERCISE = "INSERT INTO homework_question_bank (homework_id, question_bank_id) VALUES (?, ?)";
+	
 	// Get report for course
 	public static final String GET_REPORT_FOR_COURSE = 
 			"select s.student_id, u.name, r.homework_id, r.score " + 
@@ -129,4 +132,6 @@ public class StringUtils {
 	
 	//Update Attempts table
 	public static final String UPDATE_ATTEMPT = "INSERT INTO Gradiance.attempt (student_id, homework_id, question_bank_id, attempt_id) VALUES (?, ?, ?, ?)";
+	public static final String CHECK_HOMEWORK_FOR_INSTRUCTOR = "SELECT hw.homework_id from homework hw INNER JOIN instructor_teaches itc ON hw.course_id = itc.course_id WHERE itc.instructor_id = ? and hw.homework_id = ?";
+	
 }
