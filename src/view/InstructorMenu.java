@@ -110,8 +110,9 @@ public class InstructorMenu {
 				}
 				// If vaild ask for question ids
 				ArrayList<Integer> questionBnkIds = new ArrayList<>();
+				System.out.println("Enter question id to add new question or type 'done' to stop adding question");
 				while(true) {
-					System.out.println("Enter question id to add new question or type 'done' to stop adding question");
+					System.out.println("Enter question id(one on a line) to add new question or type 'done' to stop adding question");
 					String quesChoice = InputScanner.scanString();
 					if (quesChoice.equalsIgnoreCase("done")) {
 						addQuestionToExercise(homeworkId, questionBnkIds);
