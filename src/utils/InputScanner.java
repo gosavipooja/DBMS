@@ -5,13 +5,6 @@ public class InputScanner {
 	
 	static private Scanner sc = new Scanner(System.in);
 	
-	static public Scanner getScanner() {
-		if(sc == null) {
-			sc = new Scanner(System.in);
-		}
-		return sc;
-	}
-	
 	static public void closeScanner() {
 		sc.close();
 	}

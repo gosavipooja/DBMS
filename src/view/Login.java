@@ -35,22 +35,21 @@ public class Login {
 	}
 	
 	public void showLoginMenu() throws ParseException, SQLException, IOException {
-		Scanner sc = InputScanner.getScanner();
 		User user = null;
 		boolean flag = true;
 		while (flag/*true*/) {
 			System.out.println("Please Login: ");
 			System.out.println("Username:");
-			String username = sc.nextLine();
+			String username = InputScanner.scanString();
 			System.out.println("Password: ");
-			String password = sc.nextLine();
+			String password = InputScanner.scanString();
 			user = performLoginAction(username, password);
 			if (user == null) {
 				System.out.println("Invalid Login Credentials");
 				System.out.println("Choose an option : ");
 				System.out.println("1. Login");
 				System.out.println("2. Back");
-				int option = Integer.valueOf(sc.nextLine());
+				int option = InputScanner.scanInt();
 				if (option == 2) {
 					flag = false;
 					break;
