@@ -90,6 +90,26 @@ public class UpdateQueries {
 		System.out.println("Success!");
 	}
 	
+	public static void removeQuestionInExecise(User user, int hwkId, ArrayList<Integer> qBnkIds) {
+		Connection connection = new ConnectionManager().getConnection();
+		try {
+			PreparedStatement pst = connection.prepareStatement(StringUtils.DELETE_QUESTION_FROM_EXERCISE);
+			for(Integer qbId : qBnkIds) {
+				pst.setInt(1, hwkId);
+				pst.setInt(2, qbId.intValue());
+				int result = pst.executeUpdate();
+				if(result == 0) {
+					System.out.println("Some unknown error occured");
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			close(connection);
+		}
+		System.out.println("Success!");
+	}
+	
 	public static void addStudentToCourse(String student, int course) {
 		Connection connection = new ConnectionManager().getConnection();
 		try {

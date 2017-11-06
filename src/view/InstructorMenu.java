@@ -110,9 +110,8 @@ public class InstructorMenu {
 				}
 				// If vaild ask for question ids
 				ArrayList<Integer> questionBnkIds = new ArrayList<>();
-				System.out.println("Enter question id to add new question or type 'done' to stop adding question");
+				System.out.println("Enter question id (press enter after one id) to add new question or type 'done' to stop adding question");
 				while(true) {
-					System.out.println("Enter question id(one on a line) to add new question or type 'done' to stop adding question");
 					String quesChoice = InputScanner.scanString();
 					if (quesChoice.equalsIgnoreCase("done")) {
 						addQuestionToExercise(homeworkId, questionBnkIds);
@@ -123,6 +122,25 @@ public class InstructorMenu {
 				}	
 				break;
 			case 12:
+				System.out.println("*************************\\nEnter Exercise ID from which you want to remove question");
+				int hwkId = InputScanner.scanInt();
+				// Check if the homework is valid for this instructor
+				if(!checkIfVaildHomework(hwkId)) {
+					System.out.println("Insufficient privilleges to modify this exercise, exercise does not belong to you");
+					break;
+				}
+				// If vaild ask for question ids
+				ArrayList<Integer> qBnkIds = new ArrayList<>();
+				System.out.println("Enter question id (press enter after one id) to remove new question or type 'done' to stop removing question");
+				while(true) {
+					String quesChoice = InputScanner.scanString();
+					if (quesChoice.equalsIgnoreCase("done")) {
+						removeQuestionFromExercise(hwkId, qBnkIds);
+						break;
+					} else {
+						qBnkIds.add(Integer.parseInt(quesChoice));
+					}
+				}	
 				break;
 			case 13:
 				Session.logOut();
@@ -140,6 +158,12 @@ public class InstructorMenu {
 	}
 	
 	
+	private void removeQuestionFromExercise(int hwkId, ArrayList<Integer> qBnkIds) {
+		User user = Session.getUser();
+		UpdateQueries.removeQuestionInExecise(user, hwkId, qBnkIds);
+	}
+
+
 	private boolean checkIfVaildHomework(int homeworkId) {
 		User user = Session.getUser();
 		return FetchQueries.checkIfValidHomework(user, homeworkId);

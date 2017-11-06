@@ -39,7 +39,7 @@ public class StringUtils {
 			+ "select h.homework_id "
 			+ "from homework_question_bank h, question_bank qb, question q "
 			+ "where q.question_id = ? and q.question_id = qb.question_id and qb.question_bank_id = h.question_bank_id)";
-	
+	public static final String DELETE_QUESTION_FROM_EXERCISE = "delete from homework_question_bank where homework_id = ? and question_bank_id = ?";
 	
 	/** STUDENTS **/
 	//Get Students' details
