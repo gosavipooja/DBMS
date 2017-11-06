@@ -77,8 +77,8 @@ public class StudentMenu {
 			System.out.println("2. Edit Password");
 			System.out.println("0. Go Back");
 			System.out.println("\nEnter your choice:");
-			int choice = sc.nextInt();
-			sc.nextLine();
+			int choice = Integer.valueOf(sc.nextLine());
+//			sc.nextLine();
 			switch (choice) {
 			case 0:
 				flag=false; 

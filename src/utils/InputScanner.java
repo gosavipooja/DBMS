@@ -21,7 +21,7 @@ public class InputScanner {
 	}
 	
 	public static int scanInt() {
-		return sc.nextInt();//Integer.valueOf(sc.nextLine());
+		return Integer.valueOf(sc.nextLine());
 	}
 	
 }
