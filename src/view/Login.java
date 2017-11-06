@@ -78,7 +78,7 @@ public class Login {
 					System.out.println("1. Student");
 					System.out.println("2. TA");
 					System.out.println("default: exit");
-					int choice = InputScanner.scanInt();
+					int choice = sc.nextInt();
 					switch(choice) {
 					case 1:
 						new StudentMenu().showMenu();
