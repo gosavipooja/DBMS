@@ -101,7 +101,7 @@ public class UpdateQueries {
 		} finally {
 			close(connection);
 		}
-		System.out.println("Success!");
+		
 	}
 
 	public static void addHomework(Homework hw) {
