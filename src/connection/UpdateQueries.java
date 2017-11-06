@@ -123,7 +123,7 @@ public class UpdateQueries {
 		} finally {
 			close(connection);
 		}
-		System.out.println("Success!");
+		
 	}
 
 	public static void addHomework(Homework hw) {
@@ -162,6 +162,8 @@ public class UpdateQueries {
 			int result = pst.executeUpdate();
 			if(result == 0) {
 				System.out.println("Some issue....");
+			} else {
+				user.setName(name);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -180,7 +182,7 @@ public class UpdateQueries {
 			int result = pst.executeUpdate();
 			if(result == 0) {
 				System.out.println("Some issue....");
-			}
+			} 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {

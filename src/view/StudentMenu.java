@@ -15,7 +15,6 @@ import utils.*;
 
 public class StudentMenu {
 	public void showMenu() {
-		Scanner sc = InputScanner.getScanner();
 		boolean flag = true;
 		while (flag) {
 			System.out.println("\n\n");
@@ -25,7 +24,7 @@ public class StudentMenu {
 			System.out.println("3. View/Select courses");
 			System.out.println("4. Log out");
 			
-			int choice = sc.nextInt();
+			int choice = InputScanner.scanInt();
 			switch(choice) {
 			case 1:
 				viewProfile();
@@ -66,7 +65,6 @@ public class StudentMenu {
 	}
 	
 	private void editProfile() {
-		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
 		Student old_stu = FetchQueries.getStudentDetails(user);
 		
@@ -75,17 +73,17 @@ public class StudentMenu {
 			System.out.println("\n\n***** EDIT STUDENT PROFILE *****");
 			System.out.println("1. Edit Name");
 			System.out.println("2. Edit Password");
-			System.out.println("3. Go Back");
+			System.out.println("0. Go Back");
 			System.out.println("\nEnter your choice:");
-			int choice = sc.nextInt();
-			sc.nextLine();
+			int choice = InputScanner.scanInt();
+//			sc.nextLine();
 			switch (choice) {
 			case 0:
 				flag=false; 
 				break;
 			case 1:
 				System.out.println("\n\nPlease enter the new name:");
-				String name = sc.nextLine();
+				String name = InputScanner.scanString();
 				// Don't update if blank string is given
 				if (name.length() > 0) {
 					UpdateQueries.updateUserName(user, name);
@@ -93,7 +91,7 @@ public class StudentMenu {
 				break;
 			case 2:
 				System.out.println("\n\nPlease enter the new password:");
-				String passwd = sc.nextLine();
+				String passwd = InputScanner.scanString();
 				// Don't update if blank string is given
 				if (passwd.length() > 0) {
 					UpdateQueries.updateUserPassword(user, passwd);
@@ -109,7 +107,6 @@ public class StudentMenu {
 	}
 	
 	private void selectCourses() {
-		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
 		List<Course> cList = FetchQueries.getCoursesByStudent(user);
 		
@@ -126,7 +123,7 @@ public class StudentMenu {
 			}
 			
 			System.out.println("\nEnter your choice for more information about course:");
-			int choice = sc.nextInt();
+			int choice = InputScanner.scanInt();
 			
 			if(choice <= 0) return;
 			else if (choice > cList.size()) {
@@ -143,14 +140,13 @@ public class StudentMenu {
 	
 	
 	private void getHomeworksByCourse(Course course) {
-		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
 		while(true) {
 			System.out.println("\n\n***** SELECT Homeworks for "+course.getCourseCode()+" *****");
 			System.out.println("1. Current Open Homeworks");
 			System.out.println("2. Past Homeworks");
 			System.out.println("\nEnter your choice:");
-			int ch = sc.nextInt();
+			int ch = InputScanner.scanInt();
 			
 			if(ch==1) {
 				getCurrentHomeworksForCourse(course);
@@ -166,7 +162,6 @@ public class StudentMenu {
 	}
 	
 	private void getPastHomeworksForCourse(Course course) {
-		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
 		List<Homework> hList = FetchQueries.getPastExercisesByCourse( user, course);
 		
@@ -185,7 +180,7 @@ public class StudentMenu {
 			}		
 			
 			System.out.println("\nEnter a number for further details:");
-			int ch = sc.nextInt();
+			int ch = InputScanner.scanInt();
 			
 			if(ch<=0) return;
 			else if (ch>hList.size()) System.out.println("\nInvalid choice. Please enter your choice again");
@@ -197,7 +192,6 @@ public class StudentMenu {
 	}
 	
 	private void getFeedbackForHw(Homework hw) {
-		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
 		
 		System.out.println("\n\n***** Homework Report of "+hw+" *****");
@@ -231,7 +225,6 @@ public class StudentMenu {
 	}
 	
 	private void getCurrentHomeworksForCourse(Course course) {
-		Scanner sc = InputScanner.getScanner();
 		User user = Session.getUser();
 		List<Homework> hList = FetchQueries.getCurrentExercisesByCourse(user, course);
 		
@@ -249,7 +242,7 @@ public class StudentMenu {
 			}	
 			
 			System.out.println("\nSelect the HW which you would like to attempt:");
-			int ch =sc.nextInt();
+			int ch = InputScanner.scanInt();
 			
 			if (ch<=0) return;
 			else if (ch>hList.size()) {
@@ -281,7 +274,6 @@ public class StudentMenu {
 	
 	private void attemptNonAdaptiveHw(Homework hw) {
 		User user = Session.getUser();
-		Scanner sc = InputScanner.getScanner();
 		
 		int score = 0;
 		
@@ -341,7 +333,7 @@ public class StudentMenu {
 			int ch = -1;
 			while (ch<0 || ch >optList.size()) {
 				System.out.println("\nEnter your choice (0 to cancel the quiz):");
-				ch = sc.nextInt();
+				ch = InputScanner.scanInt();
 			}
 			
 			//Exit from quiz
@@ -374,7 +366,6 @@ public class StudentMenu {
 	
 	private void attemptAdaptiveHw(Homework hw) {
 		User user = Session.getUser();
-		Scanner sc = InputScanner.getScanner();
 		
 		//Check for remaining attempts
 		int maxAttemptsExhausted = FetchQueries.fetchAttemptsbyHomework(user, hw);
@@ -445,7 +436,7 @@ public class StudentMenu {
 			int ch = -1;
 			while (ch<0 || ch >optList.size()) {
 				System.out.println("\nEnter your choice (0 to cancel the quiz):");
-				ch = sc.nextInt();
+				ch = InputScanner.scanInt();
 			}
 			
 			//Exit from quiz
